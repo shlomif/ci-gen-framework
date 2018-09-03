@@ -42,12 +42,14 @@ our class CI-Gen {
     has Str $.basedir;
 
     method base-spurt($path, $contents) {
-        return spurt "$.basedir/$path", $contents;
+        my $p = IO::Path.new("$.basedir/$path");
+        IO::Path.new($p.dirname).mkdir;
+        return spurt $p, $contents;
     }
 
     method generate($name) {
 
-        .base-spurt("bin/install-tidyp-systemwide.bash", q:to/EOF/);
+        self.base-spurt("bin/install-tidyp-systemwide.bash", q:to/EOF/);
 #!/bin/bash
 
 set -x
@@ -61,7 +63,7 @@ cd tidyp-1.04
 ./configure && make && sudo make install && sudo ldconfig
 EOF
 
-        .base-spurt(".travis.bash", q:to/END_OF_PROGRAM/);
+        self.base-spurt(".travis.bash", q:to/END_OF_PROGRAM/);
 #! /bin/bash
 #
 # .travis.bash
@@ -103,7 +105,7 @@ then
 fi
 END_OF_PROGRAM
 
-       .base-spurt(".travis.yml", q:to/END_OF_PROGRAM/);
+       self.base-spurt(".travis.yml", q:to/END_OF_PROGRAM/);
 cache:
     directories:
         - $HOME/perl_modules
