@@ -17,7 +17,7 @@ DESCRIPTION
 
 CI::Gen aims to be a continuous integration scriptology generation framework. Currently it is far from being generic enough.
 
-I don't know about you but I find it tiresome to maintain all the .travis.yml / .appveyor.yml / etc. configurations for my repositories which are full of copy+paste and duplicate code. CI-Gen eventually aims to generate them based on https://en.wikipedia.org/wiki/Don%27t_repeat_yourself .
+I don't know about you, but I find it tiresome to maintain all the .travis.yml / .appveyor.yml / etc. configurations for my repositories which are full of copy+paste and duplicate code. CI-Gen eventually aims to generate them based on the https://en.wikipedia.org/wiki/Don%27t_repeat_yourself principle .
 
 Philosophy
 ==========
