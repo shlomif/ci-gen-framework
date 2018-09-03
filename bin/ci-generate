@@ -8,5 +8,4 @@ my $o = Getopt::Long.new(
     'param=s%'
 );
 my $ret = $o.get-options(@*ARGS);
-say  $ret;
 CI::Gen::CI-Gen.new(basedir=>".", params=>$ret.{'param'}.hash).generate("foo");

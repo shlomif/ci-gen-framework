@@ -49,7 +49,6 @@ our class CI-Gen {
     }
 
     method generate($name) {
-        say %.params;
 
         self.base-spurt("bin/install-tidyp-systemwide.bash", q:to/EOF/);
 #!/bin/bash
