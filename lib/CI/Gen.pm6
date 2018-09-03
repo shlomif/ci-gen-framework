@@ -56,6 +56,13 @@ EOF
 #
 set -e
 set -x
+arg_name="$1"
+shift
+if test "$arg_name" != "--cmd"
+then
+    echo "usage : $0 --cmd [cmd]"
+    exit -1
+fi
 cmd="$1"
 shift
 if false
