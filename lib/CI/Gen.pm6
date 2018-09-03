@@ -50,6 +50,7 @@ This library is free software; you can redistribute it and/or modify it under th
 our class CI-Gen {
     has Str $.basedir;
     has Str %.params;
+    has Str $.theme;
 
     method base-spurt($path, $contents) {
         my $p = IO::Path.new("$.basedir/$path");
@@ -59,6 +60,10 @@ our class CI-Gen {
 
     method generate($name) {
 
+        if ($.theme ne "XML-Grammar-Fiction")
+        {
+            die "unknown theme";
+        }
         self.base-spurt("bin/install-tidyp-systemwide.bash", q:to/EOF/);
 #!/bin/bash
 

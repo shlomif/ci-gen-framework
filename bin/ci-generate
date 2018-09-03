@@ -7,6 +7,7 @@ my %params;
 my $o = Getopt::Long.new(
     'basedir=s',
     'param=s%',
+    'theme=s',
 );
 my $ret = $o.get-options(@*ARGS);
-CI::Gen::CI-Gen.new(basedir=>($ret.{'basedir'}||'.'), params=>$ret.{'param'}.hash).generate("foo");
+CI::Gen::CI-Gen.new(basedir=>($ret.{'basedir'}||'.'), params=>$ret.{'param'}.hash, theme=>$ret.{'theme'}).generate("foo");
