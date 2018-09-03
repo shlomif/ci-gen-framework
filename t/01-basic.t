@@ -7,7 +7,9 @@ plan 2;
 pass "replace me";
 mkdir "foo";
 chdir "foo";
-CI::Gen::CI-Gen.new(basedir=>'.').generate('foo');
+CI::Gen::CI-Gen.new(basedir=>'.',params=>{
+        screenplay_subdir => 'selina-mandrake/screenplay',
+    }).generate('foo');
 # TEST
 pass "working";
 done-testing;

@@ -40,6 +40,7 @@ This library is free software; you can redistribute it and/or modify it under th
 
 our class CI-Gen {
     has Str $.basedir;
+    has Str %.params;
 
     method base-spurt($path, $contents) {
         my $p = IO::Path.new("$.basedir/$path");
@@ -63,7 +64,7 @@ cd tidyp-1.04
 ./configure && make && sudo make install && sudo ldconfig
 EOF
 
-        self.base-spurt(".travis.bash", q:to/END_OF_PROGRAM/);
+        self.base-spurt(".travis.bash", q:c:to/END_OF_PROGRAM/);
 #! /bin/bash
 #
 # .travis.bash
@@ -99,7 +100,7 @@ then
 elif test "$cmd" = "build"
 then
     export SCREENPLAY_COMMON_INC_DIR="$PWD/screenplays-common"
-    cd selina-mandrake/screenplay/
+    cd {%.params{'screenplay_subdir'}}
     make
     make test
 fi
