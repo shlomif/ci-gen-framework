@@ -27,3 +27,21 @@ Copyright 2018 Shlomi Fish
 This library is free software; you can redistribute it and/or modify it under the Artistic License 2.0.
 
 =end pod
+
+my class CI-Gen {
+    method generate($name) {
+        spurt "bin/install-tidyp-systemwide.bash", q:to/EOF/;
+#!/bin/bash
+
+set -x
+
+bdir="$HOME/tidyp-build"
+mkdir -p "$bdir"
+cd "$bdir"
+wget https://github.com/downloads/petdance/tidyp/tidyp-1.04.tar.gz
+tar -xf tidyp-1.04.tar.gz
+cd tidyp-1.04
+./configure && make && sudo make install && sudo ldconfig
+EOF
+    }
+}
