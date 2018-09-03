@@ -40,9 +40,14 @@ This library is free software; you can redistribute it and/or modify it under th
 
 our class CI-Gen {
     has Str $.basedir;
+
+    method base-spurt($path, $contents) {
+        return spurt "$.basedir/$path", $contents;
+    }
+
     method generate($name) {
 
-        spurt "$.basedir/bin/install-tidyp-systemwide.bash", q:to/EOF/;
+        .base-spurt("bin/install-tidyp-systemwide.bash", q:to/EOF/);
 #!/bin/bash
 
 set -x
@@ -56,7 +61,7 @@ cd tidyp-1.04
 ./configure && make && sudo make install && sudo ldconfig
 EOF
 
-        spurt "$.basedir/.travis.bash", q:to/END_OF_PROGRAM/;
+        .base-spurt(".travis.bash", q:to/END_OF_PROGRAM/);
 #! /bin/bash
 #
 # .travis.bash
@@ -98,7 +103,7 @@ then
 fi
 END_OF_PROGRAM
 
-        spurt "$.basedir/.travis.yml", q:to/END_OF_PROGRAM/;
+       .base-spurt(".travis.yml", q:to/END_OF_PROGRAM/);
 cache:
     directories:
         - $HOME/perl_modules
