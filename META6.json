@@ -4,7 +4,9 @@
     "Shlomi Fish"
   ],
   "build-depends" : [ ],
-  "depends" : [ ],
+  "depends" : [
+    "Getopt::Advance"
+  ],
   "description" : "A continuous integration scriptology generation framework",
   "license" : "Artistic-2.0",
   "name" : "CI::Gen",
