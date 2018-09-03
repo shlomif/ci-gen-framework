@@ -3,5 +3,5 @@
 sub MAIN
 {
     use CI::Gen;
-    CI::Gen.new(basedir=>".").generate("foo");
+    CI::Gen::CI-Gen.new(basedir=>".").generate("foo");
 }
