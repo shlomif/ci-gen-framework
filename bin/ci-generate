@@ -1,29 +1,12 @@
 #!/usr/bin/env perl6
 
-use Getopt::Advance;
-use Getopt::Advance::Helper;
-use Getopt::Advance::Exception;
+use Getopt::Long;
 
-$optset.insert-pos(
-    "directory",
-    0,
-    sub ($, $dirarg) {
-        die "$dirarg: Not a valid directory" if $dirarg.value.IO !~~ :d;
-        @files = gather &find($dirarg.value.IO);
-    }
-);
-$optset.append(
-    "h|help=b"      => "print this help.",
-    "v|version=b"   => "print program version.",
-    "?=b"           => "same as -h.",
-    :multi
-);
 use CI::Gen;
-$optset.append(
-    'param=h' => 'specify file type to directory',
+my %params;
+my $o = Getopt::Long.new(
+    'param=s%'
 );
-for <param> -> %p {
-    $optset.set-callback(
-        CI::Gen::CI-Gen.new(basedir=>".", params=>%params).generate("foo");
-    );
-}
+my $ret = $o.get-options(@*ARGS);
+say  $ret;
+CI::Gen::CI-Gen.new(basedir=>".", params=>$ret.{:param}.hash).generate("foo");

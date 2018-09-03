@@ -5,7 +5,7 @@
   ],
   "build-depends" : [ ],
   "depends" : [
-    "Getopt::Advance"
+    "Getopt::Long"
   ],
   "description" : "A continuous integration scriptology generation framework",
   "license" : "Artistic-2.0",
