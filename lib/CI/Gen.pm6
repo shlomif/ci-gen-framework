@@ -28,7 +28,7 @@ This library is free software; you can redistribute it and/or modify it under th
 
 =end pod
 
-my class CI-Gen {
+our class CI-Gen {
     has Str $.basedir;
     method generate($name) {
 
