@@ -29,8 +29,10 @@ This library is free software; you can redistribute it and/or modify it under th
 =end pod
 
 my class CI-Gen {
+    has Str $!basedir;
     method generate($name) {
-        spurt "bin/install-tidyp-systemwide.bash", q:to/EOF/;
+
+        spurt "$!basedir/bin/install-tidyp-systemwide.bash", q:to/EOF/;
 #!/bin/bash
 
 set -x
@@ -43,5 +45,6 @@ tar -xf tidyp-1.04.tar.gz
 cd tidyp-1.04
 ./configure && make && sudo make install && sudo ldconfig
 EOF
+
     }
 }
