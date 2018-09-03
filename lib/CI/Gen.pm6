@@ -10,7 +10,9 @@ CI::Gen - A continuous integration scriptology generation framework
 
 =head1 SYNOPSIS
 
-  use CI::Gen;
+    $ git clone ...
+    $ zef install --force-install .
+    $ ci-generate
 
 =head1 DESCRIPTION
 
