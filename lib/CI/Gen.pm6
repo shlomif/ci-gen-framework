@@ -97,5 +97,26 @@ then
     make test
 fi
 END_OF_PROGRAM
+
+        spurt "$.basedir/.travis.yml", q:to/END_OF_PROGRAM/;
+cache:
+    directories:
+        - $HOME/perl_modules
+os: linux
+dist: trusty
+before_install:
+    - bash .travis.bash --cmd before_install
+    - eval "$(perl -Mlocal::lib=$HOME/perl_modules)"
+    - bash .travis.bash --cmd install
+    - cpanm File::Find::Object::Rule IO::All XML::Grammar::Screenplay
+    - git clone https://github.com/shlomif/screenplays-common
+perl:
+    - "5.22"
+python:
+    - "3.5"
+script:
+    - bash .travis.bash --cmd build
+sudo: required
+END_OF_PROGRAM
     }
 }
