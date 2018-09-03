@@ -5,7 +5,7 @@
   ],
   "build-depends" : [ ],
   "depends" : [ ],
-  "description" : "blah blah blah",
+  "description" : "A continuous integration scriptology generation framework",
   "license" : "Artistic-2.0",
   "name" : "CI::Gen",
   "perl" : "6.c",

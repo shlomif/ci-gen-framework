@@ -3,7 +3,7 @@
 NAME
 ====
 
-CI::Gen - blah blah blah
+CI::Gen - A continuous integration scriptology generation framework
 
 SYNOPSIS
 ========
@@ -13,7 +13,11 @@ SYNOPSIS
 DESCRIPTION
 ===========
 
-CI::Gen is ...
+CI::Gen aims to be a continuous integration scriptology generation framework. Currently it is far from being generic enough.
+
+See https://www.joelonsoftware.com/2002/01/23/rub-a-dub-dub/ :
+
+"This stuff went into classes which were not really designed — I simply added methods lazily as I discovered a need for them. (Somewhere, someone with a big stack of 4×6 cards is sharpening their pencil to poke my eyes out. What do you mean you didn’t design your classes?) "
 
 AUTHOR
 ======
