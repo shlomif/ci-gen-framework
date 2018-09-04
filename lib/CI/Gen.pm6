@@ -149,7 +149,7 @@ sudo: false
 language: perl
 perl:
     - 'blead'
-{$p5-vers.map: {"    - '"~$_~"'\n"}.join('')}
+{($p5-vers.map: {"    - '"~$_~"'\n"}).join('')}
 matrix:
     allow_failures:
         - perl: 'blead'
