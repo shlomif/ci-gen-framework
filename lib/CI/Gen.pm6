@@ -164,8 +164,8 @@ before_install:
     - eval "$(perl -Mlocal::lib=$HOME/perl_modules)"
 install:
     - cpanm --quiet --skip-satisfied Dist::Zilla Pod::Weaver::Section::Support
-    - "(cd {$d} && dzil authordeps          --missing | grep -vP '[^\\w:]' | xargs -n 5 -P 10 cpanm --quiet)"
-    - "(cd {$d} && dzil listdeps   --author --missing | grep -vP '[^\\w:]' | cpanm --verbose)"
+    - "(cd {$d} && dzil authordeps          --missing | grep -vP '[^\\\\w:]' | xargs -n 5 -P 10 cpanm --quiet)"
+    - "(cd {$d} && dzil listdeps   --author --missing | grep -vP '[^\\\\w:]' | cpanm --verbose)"
 script:
     - "(cd {$d} && dzil smoke --release --author)"
 END_OF_PROGRAM
