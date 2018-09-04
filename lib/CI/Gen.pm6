@@ -138,7 +138,10 @@ END_OF_PROGRAM
        if ($dzil)
        {
            my $d = $.params{'subdirs'};
-        self.base-spurt($fn, q:c:to/END_OF_PROGRAM/);
+
+           my $p5-vers = <5.26 5.24 5.22 5.20 5.18 5.16 5.14>;
+
+           self.base-spurt($fn, q:c:to/END_OF_PROGRAM/);
 cache:
     directories:
         - $HOME/perl_modules
@@ -146,13 +149,7 @@ sudo: false
 language: perl
 perl:
     - 'blead'
-    - '5.26'
-    - '5.24'
-    - '5.22'
-    - '5.20'
-    - '5.18'
-    - '5.16'
-    - '5.14'
+{$p5-vers.map: {"    - '"~$_~"'\n"}.join('')}
 matrix:
     allow_failures:
         - perl: 'blead'
