@@ -3,7 +3,7 @@ use Test;
 use File::Temp;
 use CI::Gen;
 
-plan 7;
+plan 8;
 # TEST
 pass "replace me";
 my $d = tempdir;
@@ -40,4 +40,6 @@ CI::Gen::CI-Gen.new(basedir=>"$d/test-vered",params=>{
 
 # TEST
 ok IO::Path.new("$d/test-vered/.travis.yml").e, "basedir";
+# TEST
+like(slurp("$d/test-vered/.travis.yml"), /^ cache\: /);
 done-testing;

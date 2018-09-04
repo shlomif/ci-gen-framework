@@ -341,7 +341,7 @@ END_OF_PROGRAM
         }
         else
         {
-            self!write-travis-yml(q:to/END_OF_PROGRAM/);
+            self!write-travis-yml(q:c:to/END_OF_PROGRAM/);
 {$travis-cache}
 os: linux
 dist: trusty
