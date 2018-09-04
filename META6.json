@@ -5,6 +5,7 @@
   ],
   "build-depends" : [ ],
   "depends" : [
+    "Config::INI",
     "Getopt::Long"
   ],
   "description" : "A continuous integration scriptology generation framework",
