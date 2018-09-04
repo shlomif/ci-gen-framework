@@ -43,3 +43,5 @@ ok IO::Path.new("$d/test-vered/.travis.yml").e, "basedir";
 # TEST
 like(slurp("$d/test-vered/.travis.yml"), /^ cache\: /);
 done-testing;
+
+# vim:ft=perl6
