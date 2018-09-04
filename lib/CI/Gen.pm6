@@ -285,10 +285,10 @@ install:
 script:
     - "(cd {$d} && dzil smoke --release --author)"
 END_OF_PROGRAM
-    }
-    else
-    {
-        self!write-travis-yml(q:to/END_OF_PROGRAM/);
+        }
+        else
+        {
+            self!write-travis-yml(q:to/END_OF_PROGRAM/);
 {$travis-cache}
 os: linux
 dist: trusty
@@ -306,6 +306,6 @@ script:
     - bash .travis.bash --cmd build
 sudo: required
 END_OF_PROGRAM
+        }
     }
-}
 }
