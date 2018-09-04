@@ -52,15 +52,15 @@ our class CI-Gen {
     has Str %.params;
     has Str $.theme;
 
-    method base-spurt($path, $contents) {
+    method !base-spurt($path, $contents) {
         my $p = IO::Path.new("$.basedir/$path");
         IO::Path.new($p.dirname).mkdir;
         return spurt $p, $contents;
     }
 
-    method travis-yml-spurt($contents) {
+    method !write-travis-yml($contents) {
         my $fn = ".travis.yml";
-        return self.base-spurt($fn, $contents);
+        return self!base-spurt($fn, $contents);
     }
 
     method generate($name) {
@@ -70,7 +70,7 @@ our class CI-Gen {
             die "unknown theme";
         }
         my $dzil = ($.theme eq 'dzil');
-        self.base-spurt("bin/install-tidyp-systemwide.bash", q:to/EOF/);
+        self!base-spurt("bin/install-tidyp-systemwide.bash", q:to/EOF/);
 #!/bin/bash
 
 set -x
@@ -86,7 +86,7 @@ EOF
 
         if ($.theme eq 'XML-Grammar-Fiction')
         {
-        self.base-spurt(".travis.bash", q:c:to/END_OF_PROGRAM/);
+        self!base-spurt(".travis.bash", q:c:to/END_OF_PROGRAM/);
 #! /bin/bash
 #
 # .travis.bash
@@ -146,7 +146,7 @@ END_OF_PROGRAM
 
        if ($.theme eq 'latemp')
        {
-           self.travis-yml-spurt(q:c:to/END_OF_PROGRAM/);
+           self!write-travis-yml(q:c:to/END_OF_PROGRAM/);
 {$travis-cache}
 os: linux
 dist: trusty
@@ -193,7 +193,7 @@ END_OF_PROGRAM
 
            my $p5-vers = <5.26 5.24 5.22 5.20 5.18 5.16 5.14>;
 
-           self.base-spurt(".appveyor.yml", q:c:to/END_OF_PROGRAM/);
+           self!base-spurt(".appveyor.yml", q:c:to/END_OF_PROGRAM/);
 environment:
     install_berry_perl: "cmd /C git clone https://github.com/stevieb9/berrybrew && cd berrybrew/bin && berrybrew.exe install %version% && berrybrew.exe switch %version%"
     install_active_perl: "cmd /C choco install activeperl --version %version%"
@@ -272,7 +272,7 @@ END_OF_PROGRAM
 
 
 
-           self.travis-yml-spurt(q:c:to/END_OF_PROGRAM/);
+           self!write-travis-yml(q:c:to/END_OF_PROGRAM/);
 {$travis-cache}
 sudo: false
 language: perl
@@ -298,7 +298,7 @@ END_OF_PROGRAM
    }
    else
    {
-       self.travis-yml-spurt(q:to/END_OF_PROGRAM/);
+       self!write-travis-yml(q:to/END_OF_PROGRAM/);
 {$travis-cache}
 os: linux
 dist: trusty
