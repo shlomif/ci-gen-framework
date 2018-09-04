@@ -134,13 +134,16 @@ END_OF_PROGRAM
        }
 
        my $fn = ".travis.yml";
+       my $travis-cache = q:to/END_OF_PROGRAM/;
+cache:
+    directories:
+        - $HOME/perl_modules
+END_OF_PROGRAM
 
        if ($.theme eq 'latemp')
        {
            self.base-spurt($fn, q:c:to/END_OF_PROGRAM/);
-cache:
-    directories:
-        - $HOME/perl_modules
+{$travis-cache}
 os: linux
 dist: trusty
 before_install:
@@ -266,9 +269,7 @@ END_OF_PROGRAM
 
 
            self.base-spurt($fn, q:c:to/END_OF_PROGRAM/);
-cache:
-    directories:
-        - $HOME/perl_modules
+{$travis-cache}
 sudo: false
 language: perl
 perl:
@@ -294,9 +295,7 @@ END_OF_PROGRAM
    else
    {
        self.base-spurt($fn, q:to/END_OF_PROGRAM/);
-cache:
-    directories:
-        - $HOME/perl_modules
+{$travis-cache}
 os: linux
 dist: trusty
 before_install:
