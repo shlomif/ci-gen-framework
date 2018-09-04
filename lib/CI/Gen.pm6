@@ -60,7 +60,7 @@ our class CI-Gen {
 
     method generate($name) {
 
-        if (not $.theme eq ('dzil'|'XML-Grammar-Fiction'))
+        if (not $.theme eq ('dzil'|'latemp'|'XML-Grammar-Fiction'))
         {
             die "unknown theme";
         }
@@ -79,7 +79,7 @@ cd tidyp-1.04
 ./configure && make && sudo make install && sudo ldconfig
 EOF
 
-        if (not $dzil)
+        if ($.theme eq 'XML-Grammar-Fiction')
         {
         self.base-spurt(".travis.bash", q:c:to/END_OF_PROGRAM/);
 #! /bin/bash
@@ -135,7 +135,33 @@ END_OF_PROGRAM
 
        my $fn = ".travis.yml";
 
-       if ($dzil)
+       if ($.theme eq 'latemp')
+       {
+           self.base-spurt($fn, q:c:to/END_OF_PROGRAM/);
+cache:
+    directories:
+        - $HOME/perl_modules
+os: linux
+dist: trusty
+before_install:
+    - sudo apt-get update -qq
+    - sudo apt-get install -y ack-grep cmake cpanminus docbook-defguide docbook-xsl docbook-xsl-ns hunspell mercurial myspell-en-gb libhunspell-dev libperl-dev perl python3 python3-setuptools python3-pip valgrind wml xsltproc
+    - sudo dpkg-divert --local --divert /usr/bin/ack --rename --add /usr/bin/ack-grep
+    - cpanm local::lib
+    - eval "$(perl -Mlocal::lib=$HOME/perl_modules)"
+    - cpanm Alien::Tidyp App::XML::DocBook::Builder Pod::Xhtml YAML::XS
+    - cpanm --notest HTML::Tidy
+    - {q«"cpanm $(perl -MYAML::XS=LoadFile -e 'print join q( ), sort {$a cmp $b} keys(%{LoadFile(q(bin/required-modules.yml))->{required}->{perl5_modules}})')"»}
+    - gem install compass compass-blueprint
+    - sudo -H `which python3` -m pip install cookiecutter
+    - a='latemp' ; v='0.8.0' ; b="$a-$v" ; arc="$b.tar.xz"; ( wget http://web-cpan.shlomifish.org/latemp/download/"$arc" && tar -xvf "$arc" && (cd "$b" && mkdir b && cd b && cmake .. && make && sudo make install) && rm -fr "$b" )
+    - ( cd .. && git clone https://github.com/thewml/wml-extended-apis.git && cd wml-extended-apis/xhtml/1.x && bash Install.bash )
+    - ( cd .. && git clone https://github.com/thewml/latemp.git && cd latemp/support-headers && perl install.pl )
+    - bash -x bin/install-npm-deps.sh
+script: "m() {'{'} make DOCBOOK5_XSL_STYLESHEETS_PATH=/usr/share/xml/docbook/stylesheet/docbook-xsl-ns \\"$@\\" ; {'}'} ; ./gen-helpers && (echo $'#!/bin/bash\\\\ntrue\\\\n' > bin/batch-inplace-html-minifier ; chmod +x bin/batch-inplace-html-minifier ; true) && m && m test"
+END_OF_PROGRAM
+       }
+       elsif ($dzil)
        {
            my $d = $.params{'subdirs'};
 
