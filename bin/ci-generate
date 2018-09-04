@@ -16,7 +16,7 @@ if (IO::Path.new($ini).e)
 {
     my %h = Config::INI::parse_file($ini);
     my %n =%h<_>;
-    %n.push(%h.grep(none(*.key ne '_')));
+    %n.push(%h.grep(*.key ne '_'));
     %n.push(|$ret);
     $ret = %n;
 }
