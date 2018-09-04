@@ -158,7 +158,8 @@ before_install:
     - ( cd .. && git clone https://github.com/thewml/wml-extended-apis.git && cd wml-extended-apis/xhtml/1.x && bash Install.bash )
     - ( cd .. && git clone https://github.com/thewml/latemp.git && cd latemp/support-headers && perl install.pl )
     - bash -x bin/install-npm-deps.sh
-script: "m() {'{'} make DOCBOOK5_XSL_STYLESHEETS_PATH=/usr/share/xml/docbook/stylesheet/docbook-xsl-ns \\"$@\\" ; {'}'} ; ./gen-helpers && (echo $'#!/bin/bash\\\\ntrue\\\\n' > bin/batch-inplace-html-minifier ; chmod +x bin/batch-inplace-html-minifier ; true) && m && m test"
+script:
+    - bash -x bin/run-ci-build.bash
 END_OF_PROGRAM
        }
        elsif ($dzil)
