@@ -175,6 +175,7 @@ before_install:
     - pwd
     - echo "HOME=$HOME"
     - bash -x bin/install-npm-deps.sh
+    - sudo ln -s /usr/bin/make /usr/bin/gmake
 script:
     - bash -x bin/run-ci-build.bash
 END_OF_PROGRAM
