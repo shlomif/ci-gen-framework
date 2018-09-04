@@ -151,7 +151,7 @@ before_install:
     - eval "$(perl -Mlocal::lib=$HOME/perl_modules)"
     - cpanm Alien::Tidyp App::XML::DocBook::Builder Pod::Xhtml YAML::XS
     - cpanm --notest HTML::Tidy
-    - {q«"cpanm $(perl -MYAML::XS=LoadFile -e 'print join q( ), sort {$a cmp $b} keys(%{LoadFile(q(bin/required-modules.yml))->{required}->{perl5_modules}})')"»}
+    - {q«"cpanm $(perl -MYAML::XS=LoadFile -e 'print join q( ), sort {$a cmp $b} keys(%{LoadFile(q(bin/required-modules.yml))->{required}->{perl5_modules}})')"»}
     - gem install compass compass-blueprint
     - sudo -H `which python3` -m pip install cookiecutter
     - a='latemp' ; v='0.8.0' ; b="$a-$v" ; arc="$b.tar.xz"; ( wget http://web-cpan.shlomifish.org/latemp/download/"$arc" && tar -xvf "$arc" && (cd "$b" && mkdir b && cd b && cmake .. && make && sudo make install) && rm -fr "$b" )
