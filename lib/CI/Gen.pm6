@@ -87,9 +87,7 @@ cd tidyp-1.04
 ./configure && make && sudo make install && sudo ldconfig
 EOF
 
-        if ($.theme eq 'XML-Grammar-Fiction')
-        {
-            self!base-spurt(".travis.bash", q:c:to/END_OF_PROGRAM/);
+        my $travis-bash-prefix = q:c:to/EOF/;
 #! /bin/bash
 #
 # .travis.bash
@@ -111,6 +109,11 @@ shift
 if false
 then
     :
+EOF
+        if ($.theme eq 'XML-Grammar-Fiction')
+        {
+            self!base-spurt(".travis.bash", q:c:to/END_OF_PROGRAM/);
+{$travis-bash-prefix}
 elif test "$cmd" = "before_install"
 then
     sudo apt-get update -qq
@@ -143,27 +146,7 @@ END_OF_PROGRAM
         if ($.theme eq 'XML-Grammar-Vered')
         {
             self!base-spurt(".travis.bash", q:c:to/END_OF_PROGRAM/);
-#! /bin/bash
-#
-# .travis.bash
-# Copyright (C) 2018 Shlomi Fish <shlomif@cpan.org>
-#
-# Distributed under terms of the MIT license.
-#
-set -e
-set -x
-arg_name="$1"
-shift
-if test "$arg_name" != "--cmd"
-then
-    echo "usage : $0 --cmd [cmd]"
-    exit -1
-fi
-cmd="$1"
-shift
-if false
-then
-    :
+{$travis-bash-prefix}
 elif test "$cmd" = "before_install"
 then
     sudo apt-get update -qq
