@@ -3,7 +3,7 @@ use Test;
 use File::Temp;
 use CI::Gen;
 
-plan 6;
+plan 7;
 # TEST
 pass "replace me";
 my $d = tempdir;
@@ -32,4 +32,12 @@ ok IO::Path.new("$d/test3/.travis.yml").e, "exe";
 run-gen(['--basedir', "$d/test-latemp", "--param", "subdirs=foo", '--theme', "latemp",]);
 # TEST
 ok IO::Path.new("$d/test-latemp/.travis.yml").e, "exe";
+CI::Gen::CI-Gen.new(basedir=>"$d/test-vered",params=>{
+        subdirs => 'c-begin',
+    },
+    theme => "XML-Grammar-Vered",
+).generate('foo');
+
+# TEST
+ok IO::Path.new("$d/test-vered/.travis.yml").e, "basedir";
 done-testing;
