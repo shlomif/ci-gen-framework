@@ -8,7 +8,7 @@
     "Getopt::Long"
   ],
   "description" : "A continuous integration scriptology generation framework",
-  "license" : "Artistic-2.0",
+  "license" : "mit",
   "name" : "CI::Gen",
   "perl" : "6.c",
   "provides" : {
