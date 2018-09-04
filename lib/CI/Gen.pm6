@@ -110,16 +110,19 @@ if false
 then
     :
 EOF
-        if ($.theme eq 'XML-Grammar-Fiction')
-        {
-            self!base-spurt(".travis.bash", q:c:to/END_OF_PROGRAM/);
-{$travis-bash-prefix}
+        my $xmlg-before-install = q:to/EOF/;
 elif test "$cmd" = "before_install"
 then
     sudo apt-get update -qq
     sudo apt-get install -y ack-grep cpanminus dbtoepub docbook-defguide docbook-xsl libperl-dev libxml-libxml-perl libxml-libxslt-perl make perl tidy xsltproc
     sudo dpkg-divert --local --divert /usr/bin/ack --rename --add /usr/bin/ack-grep
     cpanm local::lib
+EOF
+        if ($.theme eq 'XML-Grammar-Fiction')
+        {
+            self!base-spurt(".travis.bash", q:c:to/END_OF_PROGRAM/);
+{$travis-bash-prefix}
+{$xmlg-before-install}
 elif test "$cmd" = "install"
 then
     cpanm --notest Alien::Tidyp YAML::XS
@@ -147,12 +150,7 @@ END_OF_PROGRAM
         {
             self!base-spurt(".travis.bash", q:c:to/END_OF_PROGRAM/);
 {$travis-bash-prefix}
-elif test "$cmd" = "before_install"
-then
-    sudo apt-get update -qq
-    sudo apt-get install -y ack-grep cpanminus dbtoepub docbook-defguide docbook-xsl libperl-dev libxml-libxml-perl libxml-libxslt-perl make perl tidy xsltproc
-    sudo dpkg-divert --local --divert /usr/bin/ack --rename --add /usr/bin/ack-grep
-    cpanm local::lib
+{$xmlg-before-install}
 elif test "$cmd" = "install"
 then
     cpanm XML::Grammar::Vered App::XML::DocBook::Docmake
