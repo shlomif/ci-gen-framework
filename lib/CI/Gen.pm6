@@ -47,24 +47,27 @@ This library is free software; you can redistribute it and/or modify it under th
 
 =end pod
 
-our class CI-Gen {
+our class CI-Gen
+{
     has Str $.basedir;
     has Str %.params;
     has Str $.theme;
 
-    method !base-spurt($path, $contents) {
+    method !base-spurt($path, $contents)
+    {
         my $p = IO::Path.new("$.basedir/$path");
         IO::Path.new($p.dirname).mkdir;
         return spurt $p, $contents;
     }
 
-    method !write-travis-yml($contents) {
+    method !write-travis-yml($contents)
+    {
         my $fn = ".travis.yml";
         return self!base-spurt($fn, $contents);
     }
 
-    method generate($name) {
-
+    method generate($name)
+    {
         if (not $.theme eq ('dzil'|'latemp'|'XML-Grammar-Fiction'))
         {
             die "unknown theme";
@@ -86,7 +89,7 @@ EOF
 
         if ($.theme eq 'XML-Grammar-Fiction')
         {
-        self!base-spurt(".travis.bash", q:c:to/END_OF_PROGRAM/);
+            self!base-spurt(".travis.bash", q:c:to/END_OF_PROGRAM/);
 #! /bin/bash
 #
 # .travis.bash
@@ -146,7 +149,7 @@ END_OF_PROGRAM
 
        if ($.theme eq 'latemp')
        {
-           self!write-travis-yml(q:c:to/END_OF_PROGRAM/);
+            self!write-travis-yml(q:c:to/END_OF_PROGRAM/);
 {$travis-cache}
 os: linux
 dist: trusty
@@ -189,11 +192,11 @@ END_OF_PROGRAM
        }
        elsif ($dzil)
        {
-           my $d = $.params{'subdirs'};
+            my $d = $.params{'subdirs'};
 
-           my $p5-vers = <5.26 5.24 5.22 5.20 5.18 5.16 5.14>;
+            my $p5-vers = <5.26 5.24 5.22 5.20 5.18 5.16 5.14>;
 
-           self!base-spurt(".appveyor.yml", q:c:to/END_OF_PROGRAM/);
+            self!base-spurt(".appveyor.yml", q:c:to/END_OF_PROGRAM/);
 environment:
     install_berry_perl: "cmd /C git clone https://github.com/stevieb9/berrybrew && cd berrybrew/bin && berrybrew.exe install %version% && berrybrew.exe switch %version%"
     install_active_perl: "cmd /C choco install activeperl --version %version%"
@@ -259,20 +262,7 @@ matrix:
           version: "5.24.1.2402"
 END_OF_PROGRAM
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-           self!write-travis-yml(q:c:to/END_OF_PROGRAM/);
+            self!write-travis-yml(q:c:to/END_OF_PROGRAM/);
 {$travis-cache}
 sudo: false
 language: perl
@@ -295,10 +285,10 @@ install:
 script:
     - "(cd {$d} && dzil smoke --release --author)"
 END_OF_PROGRAM
-   }
-   else
-   {
-       self!write-travis-yml(q:to/END_OF_PROGRAM/);
+    }
+    else
+    {
+        self!write-travis-yml(q:to/END_OF_PROGRAM/);
 {$travis-cache}
 os: linux
 dist: trusty
