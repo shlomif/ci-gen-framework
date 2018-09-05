@@ -66,27 +66,7 @@ our class CI-Gen
         return self!base-spurt($fn, $contents);
     }
 
-    method generate($name)
-    {
-        if (not $.theme eq ('dzil'|'latemp'|'XML-Grammar-Fiction'|'XML-Grammar-Vered'))
-        {
-            die "unknown theme";
-        }
-        my $dzil = ($.theme eq 'dzil');
-        self!base-spurt("bin/install-tidyp-systemwide.bash", q:to/EOF/);
-#!/bin/bash
-
-set -x
-
-bdir="$HOME/tidyp-build"
-mkdir -p "$bdir"
-cd "$bdir"
-wget https://github.com/downloads/petdance/tidyp/tidyp-1.04.tar.gz
-tar -xf tidyp-1.04.tar.gz
-cd tidyp-1.04
-./configure && make && sudo make install && sudo ldconfig
-EOF
-
+    method !gen-xml-g($param-name) {
         my $travis-bash-prefix = q:c:to/EOF/;
 #! /bin/bash
 #
@@ -126,10 +106,7 @@ EOF
     mkdir -p "$h"
     git clone https://github.com/shlomif/shlomi-fish-homepage "$h/trunk"
 EOF
-
-        if ($.theme eq 'XML-Grammar-Fiction')
-        {
-            self!base-spurt(".travis.bash", q:c:to/END_OF_PROGRAM/);
+        return q:c:to/END_OF_PROGRAM/
 {$travis-bash-prefix}
 {$xmlg-before-install}
 elif test "$cmd" = "install"
@@ -139,7 +116,7 @@ then
 elif test "$cmd" = "build"
 then
     export SCREENPLAY_COMMON_INC_DIR="$PWD/screenplays-common"
-    cd {%.params{'screenplay_subdir'}}
+    cd {%.params{$param-name}}
     m()
     {'{'}
         make DBTOEPUB="/usr/bin/ruby $(which dbtoepub)" \
@@ -150,30 +127,36 @@ then
     m test
 fi
 END_OF_PROGRAM
+    }
+    method generate($name)
+    {
+        if (not $.theme eq ('dzil'|'latemp'|'XML-Grammar-Fiction'|'XML-Grammar-Vered'))
+        {
+            die "unknown theme";
+        }
+        my $dzil = ($.theme eq 'dzil');
+        self!base-spurt("bin/install-tidyp-systemwide.bash", q:to/EOF/);
+#!/bin/bash
+
+set -x
+
+bdir="$HOME/tidyp-build"
+mkdir -p "$bdir"
+cd "$bdir"
+wget https://github.com/downloads/petdance/tidyp/tidyp-1.04.tar.gz
+tar -xf tidyp-1.04.tar.gz
+cd tidyp-1.04
+./configure && make && sudo make install && sudo ldconfig
+EOF
+
+
+        if ($.theme eq 'XML-Grammar-Fiction')
+        {
+            self!base-spurt(".travis.bash", self!gen-xml-g('screenplay_subdir'));
         }
         if ($.theme eq 'XML-Grammar-Vered')
         {
-            self!base-spurt(".travis.bash", q:c:to/END_OF_PROGRAM/);
-{$travis-bash-prefix}
-{$xmlg-before-install}
-elif test "$cmd" = "install"
-then
-    cpanm XML::Grammar::Vered App::XML::DocBook::Docmake
-{$xmlg-install}
-elif test "$cmd" = "build"
-then
-    export SCREENPLAY_COMMON_INC_DIR="$PWD/screenplays-common"
-    cd {%.params{'subdirs'}}
-    m()
-    {'{'}
-        make DBTOEPUB="/usr/bin/ruby $(which dbtoepub)" \
-            DOCBOOK5_XSL_STYLESHEETS_PATH=/usr/share/xml/docbook/stylesheet/docbook-xsl-ns \
-        "$@"
-    {'}'}
-    m
-    m test
-fi
-END_OF_PROGRAM
+            self!base-spurt(".travis.bash", self!gen-xml-g('subdirs'));
         }
 
         my $travis-cache = q:to/END_OF_PROGRAM/;
