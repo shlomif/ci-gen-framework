@@ -8,7 +8,7 @@ A Don't Repeat Yourself (DRY) framework for generating [continuous integration](
 CODE
 ====
 
-See [this](https://github.com/shlomif/perl6-CI-Gen).
+See [this](./perl6-CI-Gen/).
 
 SYNOPSIS
 ========
