@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/shlomif/perl6-CI-Gen.svg?branch=master)](https://travis-ci.org/shlomif/perl6-CI-Gen)
+[![Build Status](https://travis-ci.org/shlomif/ci-gen-framework.svg?branch=master)](https://travis-ci.org/shlomif/ci-gen-framework)
 
 NAME
 ====
