@@ -128,6 +128,12 @@ then
 fi
 END_OF_PROGRAM
     }
+
+    method !xml-g-write-bash($param-name)
+    {
+        return self!base-spurt(".travis.bash", self!gen-xml-g($param-name));
+    }
+
     method generate($name)
     {
         if (not $.theme eq ('dzil'|'latemp'|'XML-Grammar-Fiction'|'XML-Grammar-Vered'))
@@ -152,11 +158,11 @@ EOF
 
         if ($.theme eq 'XML-Grammar-Fiction')
         {
-            self!base-spurt(".travis.bash", self!gen-xml-g('screenplay_subdir'));
+            self!xml-g-write-bash('screenplay_subdir');
         }
         if ($.theme eq 'XML-Grammar-Vered')
         {
-            self!base-spurt(".travis.bash", self!gen-xml-g('subdirs'));
+            self!xml-g-write-bash('subdirs');
         }
 
         my $travis-cache = q:to/END_OF_PROGRAM/;
