@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/shlomif/perl6-CI-Gen.svg?branch=master)](https://travis-ci.org/shlomif/perl6-CI-Gen)
-
 NAME
 ====
 
