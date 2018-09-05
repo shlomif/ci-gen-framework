@@ -70,7 +70,7 @@ our class CI-Gen
         return <sudo apt-get --no-install-recommends install -y>;
     }
 
-    method !gen-xml-g($param-name) {
+    method !gen-xml-g($param-name, @pkgs) {
         my $travis-bash-prefix = q:c:to/EOF/;
 #! /bin/bash
 #
@@ -98,7 +98,7 @@ EOF
 elif test "$cmd" = "before_install"
 then
     sudo apt-get update -qq
-    {self!apt-get-inst()} ack-grep cpanminus dbtoepub docbook-defguide docbook-xsl libperl-dev libxml-libxml-perl libxml-libxslt-perl make perl tidy xsltproc
+    {self!apt-get-inst()} {@pkgs}
     sudo dpkg-divert --local --divert /usr/bin/ack --rename --add /usr/bin/ack-grep
     cpanm local::lib
 EOF
@@ -133,9 +133,17 @@ fi
 END_OF_PROGRAM
     }
 
+    method !write-bash($param-name, @pkgs)
+    {
+        return self!base-spurt(path=>".travis.bash", contents=>self!gen-xml-g(param-name=>$param-name, pkgs=>@pkgs));
+    }
+
     method !xml-g-write-bash($param-name)
     {
-        return self!base-spurt(".travis.bash", self!gen-xml-g($param-name));
+        return self!write-bash(
+            param-name=>$param-name,
+            pkgs=><ack-grep cpanminus dbtoepub docbook-defguide docbook-xsl libperl-dev libxml-libxml-perl libxml-libxslt-perl make perl tidy xsltproc>
+        );
     }
 
     method generate($name)
@@ -177,16 +185,14 @@ END_OF_PROGRAM
 
        if ($.theme eq 'latemp')
        {
+            self!write-bash(param-name=>'subdirs', pkgs=><ack-grep asciidoc build-essential cmake cpanminus dbtoepub docbook-defguide docbook-xsl docbook-xsl-ns fortune-mod hunspell inkscape myspell-en-gb libdb5.3-dev libgd-dev libhunspell-dev libncurses-dev libpcre3-dev libperl-dev mercurial myspell-en-gb lynx optipng perl python3 python3-setuptools python3-pip silversearcher-ag tidy valgrind wml xsltproc xz-utils zip>);
             self!write-travis-yml(q:c:to/END_OF_PROGRAM/);
 {$travis-cache}
 os: linux
 dist: trusty
 before_install:
-    - sudo apt-get update -qq
-    - {self!apt-get-inst()} ack-grep asciidoc build-essential cmake cpanminus dbtoepub docbook-defguide docbook-xsl docbook-xsl-ns fortune-mod hunspell inkscape myspell-en-gb libdb5.3-dev libgd-dev libhunspell-dev libncurses-dev libpcre3-dev libperl-dev mercurial myspell-en-gb lynx optipng perl python3 python3-setuptools python3-pip silversearcher-ag tidy valgrind wml xsltproc xz-utils zip
-    - sudo dpkg-divert --local --divert /usr/bin/ack --rename --add /usr/bin/ack-grep
+    - bash .travis.bash --cmd before_install
     - go get -u github.com/tdewolff/minify/cmd/minify
-    - cpanm local::lib
     - eval "$(perl -Mlocal::lib=$HOME/perl_modules)"
     - cpanm Alien::Tidyp App::XML::DocBook::Builder Pod::Xhtml YAML::XS
     - cpanm --notest HTML::Tidy
