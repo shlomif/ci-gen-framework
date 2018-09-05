@@ -11,7 +11,9 @@ my $o = Getopt::Long.new(
     'theme=s',
 );
 my $ret = $o.get-options(@*ARGS);
-my $ini = ".ci-gen.ini";
+my $basedir = ($ret.{'basedir'} || '.');
+my $ini-bn = ".ci-gen.ini";
+my $ini = "$basedir/$ini-bn";
 if (IO::Path.new($ini).e)
 {
     my %h = Config::INI::parse_file($ini);
@@ -20,4 +22,4 @@ if (IO::Path.new($ini).e)
     %n.push(|$ret);
     $ret = %n;
 }
-CI::Gen::CI-Gen.new(basedir=>($ret.{'basedir'}||'.'), params=>$ret.{'param'}.hash, theme=>$ret.{'theme'}).generate("foo");
+CI::Gen::CI-Gen.new(basedir=>$basedir, params=>$ret.{'param'}.hash, theme=>$ret.{'theme'}).generate("foo");
