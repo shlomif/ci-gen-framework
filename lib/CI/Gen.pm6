@@ -70,7 +70,7 @@ our class CI-Gen
         return <sudo apt-get --no-install-recommends install -y>;
     }
 
-    method !gen-xml-g($param-name, @pkgs) {
+    method !gen-xml-g(:$param-name, :@pkgs) {
         my $travis-bash-prefix = q:c:to/EOF/;
 #! /bin/bash
 #
@@ -133,9 +133,9 @@ fi
 END_OF_PROGRAM
     }
 
-    method !write-bash($param-name, @pkgs)
+    method !write-bash(:$param-name, :@pkgs)
     {
-        return self!base-spurt(path=>".travis.bash", contents=>self!gen-xml-g(param-name=>$param-name, pkgs=>@pkgs));
+        return self!base-spurt(".travis.bash", self!gen-xml-g(param-name=>$param-name, pkgs=>@pkgs));
     }
 
     method !xml-g-write-bash($param-name)
