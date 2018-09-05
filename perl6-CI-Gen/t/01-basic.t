@@ -12,10 +12,13 @@ sub test-e(Str $var, Str $blurb) {
 }
 
 {
-    CI::Gen::CI-Gen.new(basedir=>"$d/test1",params=>{
-        screenplay_subdir => 'selina-mandrake/screenplay',
-    },
-    theme => "XML-Grammar-Fiction",
+    CI::Gen::CI-Gen.new(
+        basedir=>"$d/test1",
+        params=>
+        {
+            screenplay_subdir => 'selina-mandrake/screenplay',
+        },
+        theme => "XML-Grammar-Fiction",
     ).generate('foo');
 
     # TEST
@@ -45,10 +48,13 @@ sub run-gen(@args) {
 }
 
 {
-    CI::Gen::CI-Gen.new(basedir=>"$d/test-vered",params=>{
-        subdirs => 'c-begin',
-    },
-    theme => "XML-Grammar-Vered",
+    CI::Gen::CI-Gen.new(
+        basedir=>"$d/test-vered",
+        params=>
+        {
+            subdirs => 'c-begin',
+        },
+        theme => "XML-Grammar-Vered",
     ).generate('foo');
 
     # TEST
