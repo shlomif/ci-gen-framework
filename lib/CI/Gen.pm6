@@ -66,6 +66,10 @@ our class CI-Gen
         return self!base-spurt($fn, $contents);
     }
 
+    method !apt-get-inst() {
+        return <sudo apt-get --no-install-recommends install -y>;
+    }
+
     method !gen-xml-g($param-name) {
         my $travis-bash-prefix = q:c:to/EOF/;
 #! /bin/bash
@@ -90,11 +94,11 @@ if false
 then
     :
 EOF
-        my $xmlg-before-install = q:to/EOF/;
+        my $xmlg-before-install = q:c:to/EOF/;
 elif test "$cmd" = "before_install"
 then
     sudo apt-get update -qq
-    sudo apt-get install -y ack-grep cpanminus dbtoepub docbook-defguide docbook-xsl libperl-dev libxml-libxml-perl libxml-libxslt-perl make perl tidy xsltproc
+    {self!apt-get-inst()} ack-grep cpanminus dbtoepub docbook-defguide docbook-xsl libperl-dev libxml-libxml-perl libxml-libxslt-perl make perl tidy xsltproc
     sudo dpkg-divert --local --divert /usr/bin/ack --rename --add /usr/bin/ack-grep
     cpanm local::lib
 EOF
@@ -179,7 +183,7 @@ os: linux
 dist: trusty
 before_install:
     - sudo apt-get update -qq
-    - sudo apt-get --no-install-recommends install -y ack-grep asciidoc build-essential cmake cpanminus dbtoepub docbook-defguide docbook-xsl docbook-xsl-ns fortune-mod hunspell inkscape myspell-en-gb libdb5.3-dev libgd-dev libhunspell-dev libncurses-dev libpcre3-dev libperl-dev mercurial myspell-en-gb lynx optipng perl python3 python3-setuptools python3-pip silversearcher-ag tidy valgrind wml xsltproc xz-utils zip
+    - {self!apt-get-inst()} ack-grep asciidoc build-essential cmake cpanminus dbtoepub docbook-defguide docbook-xsl docbook-xsl-ns fortune-mod hunspell inkscape myspell-en-gb libdb5.3-dev libgd-dev libhunspell-dev libncurses-dev libpcre3-dev libperl-dev mercurial myspell-en-gb lynx optipng perl python3 python3-setuptools python3-pip silversearcher-ag tidy valgrind wml xsltproc xz-utils zip
     - sudo dpkg-divert --local --divert /usr/bin/ack --rename --add /usr/bin/ack-grep
     - go get -u github.com/tdewolff/minify/cmd/minify
     - cpanm local::lib
