@@ -24,6 +24,6 @@ if (IO::Path.new($ini).e)
 }
 CI::Gen::CI-Gen.new(
     basedir=>$basedir,
-    params=>$ret.{'param'}.hash,
+    params=>($ret.{'param'}.hash||{}),
     theme=>$ret.{'theme'}
 ).generate("foo");

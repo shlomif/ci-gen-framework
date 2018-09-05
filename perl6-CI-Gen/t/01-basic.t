@@ -3,7 +3,7 @@ use Test;
 use File::Temp;
 use CI::Gen;
 
-plan 8;
+plan 10;
 # TEST
 pass "replace me";
 my $d = tempdir;
@@ -42,6 +42,18 @@ CI::Gen::CI-Gen.new(basedir=>"$d/test-vered",params=>{
 ok IO::Path.new("$d/test-vered/.travis.yml").e, "basedir";
 # TEST
 like(slurp("$d/test-vered/.travis.yml"), /^ cache\: /);
+
+{
+    IO::Path.new("$d/test-latemp-ini").mkdir;
+    spurt "$d/test-latemp-ini/.ci-gen.ini", "theme = latemp\n[param]\n\nsubdirs = .\n";
+    run-gen(['--basedir', "$d/test-latemp-ini"]);
+
+    # TEST
+    ok IO::Path.new("$d/test-latemp-ini/.travis.yml").e, "exe";
+    # TEST
+    ok IO::Path.new("$d/test-latemp-ini/.travis.bash").e, "exists";
+
+}
 done-testing;
 
 # vim:ft=perl6
