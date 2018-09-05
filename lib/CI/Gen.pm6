@@ -118,6 +118,15 @@ then
     sudo dpkg-divert --local --divert /usr/bin/ack --rename --add /usr/bin/ack-grep
     cpanm local::lib
 EOF
+
+        my $xmlg-install = q:to/EOF/;
+    bash -x bin/install-tidyp-systemwide.bash
+    cpanm --notest HTML::Tidy
+    h=~/Docs/homepage/homepage
+    mkdir -p "$h"
+    git clone https://github.com/shlomif/shlomi-fish-homepage "$h/trunk"
+EOF
+
         if ($.theme eq 'XML-Grammar-Fiction')
         {
             self!base-spurt(".travis.bash", q:c:to/END_OF_PROGRAM/);
@@ -126,11 +135,7 @@ EOF
 elif test "$cmd" = "install"
 then
     cpanm --notest Alien::Tidyp YAML::XS
-    bash -x bin/install-tidyp-systemwide.bash
-    cpanm --notest HTML::Tidy
-    h=~/Docs/homepage/homepage
-    mkdir -p "$h"
-    git clone https://github.com/shlomif/shlomi-fish-homepage "$h/trunk"
+{$xmlg-install}
 elif test "$cmd" = "build"
 then
     export SCREENPLAY_COMMON_INC_DIR="$PWD/screenplays-common"
@@ -154,11 +159,7 @@ END_OF_PROGRAM
 elif test "$cmd" = "install"
 then
     cpanm XML::Grammar::Vered App::XML::DocBook::Docmake
-    bash -x bin/install-tidyp-systemwide.bash
-    cpanm --notest HTML::Tidy
-    h=~/Docs/homepage/homepage
-    mkdir -p "$h"
-    git clone https://github.com/shlomif/shlomi-fish-homepage "$h/trunk"
+{$xmlg-install}
 elif test "$cmd" = "build"
 then
     export SCREENPLAY_COMMON_INC_DIR="$PWD/screenplays-common"
