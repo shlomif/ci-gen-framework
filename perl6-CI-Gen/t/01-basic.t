@@ -6,6 +6,11 @@ use CI::Gen;
 plan 8;
 
 my $d = tempdir;
+
+sub test-e(Str $var, Str $blurb) {
+    return ok IO::Path.new($var).e, $blurb;
+}
+
 {
     CI::Gen::CI-Gen.new(basedir=>"$d/test1",params=>{
         screenplay_subdir => 'selina-mandrake/screenplay',
@@ -14,7 +19,7 @@ my $d = tempdir;
     ).generate('foo');
 
     # TEST
-    ok IO::Path.new("$d/test1/.travis.yml").e, "basedir";
+    test-e "$d/test1/.travis.yml", "basedir";
 }
 
 sub run-gen(@args) {
@@ -24,19 +29,19 @@ sub run-gen(@args) {
 {
     run-gen(['--basedir', "$d/test2", "--param", "screenplay_subdir=foo", '--theme', "XML-Grammar-Fiction",]);
     # TEST
-    ok IO::Path.new("$d/test2/.travis.yml").e, "exe";
+    test-e "$d/test2/.travis.yml", "exe";
 }
 
 {
     run-gen(['--basedir', "$d/test3", "--param", "subdirs=foo", '--theme', "dzil",]);
     # TEST
-    ok IO::Path.new("$d/test3/.travis.yml").e, "exe";
+    test-e "$d/test3/.travis.yml", "exe";
 }
 
 {
     run-gen(['--basedir', "$d/test-latemp", "--param", "subdirs=foo", '--theme', "latemp",]);
     # TEST
-    ok IO::Path.new("$d/test-latemp/.travis.yml").e, "exe";
+    test-e "$d/test-latemp/.travis.yml", "exe";
 }
 
 {
@@ -47,7 +52,7 @@ sub run-gen(@args) {
     ).generate('foo');
 
     # TEST
-    ok IO::Path.new("$d/test-vered/.travis.yml").e, "basedir";
+    test-e "$d/test-vered/.travis.yml", "basedir";
     # TEST
     like(slurp("$d/test-vered/.travis.yml"), /^ cache\: /);
 }
@@ -58,9 +63,9 @@ sub run-gen(@args) {
     run-gen(['--basedir', "$d/test-latemp-ini"]);
 
     # TEST
-    ok IO::Path.new("$d/test-latemp-ini/.travis.yml").e, "exe";
+    test-e "$d/test-latemp-ini/.travis.yml", "exe";
     # TEST
-    ok IO::Path.new("$d/test-latemp-ini/.travis.bash").e, "exists";
+    test-e "$d/test-latemp-ini/.travis.bash", "exists";
 
 }
 done-testing;
