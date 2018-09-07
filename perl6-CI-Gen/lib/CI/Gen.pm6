@@ -181,6 +181,7 @@ EOF
 cache:
     directories:
         - $HOME/perl_modules
+        - $HOME/tidyall_d
 END_OF_PROGRAM
 
        if ($.theme eq 'latemp')
@@ -221,7 +222,7 @@ before_install:
     - bash -x bin/install-npm-deps.sh
     - sudo ln -s /usr/bin/make /usr/bin/gmake
 script:
-    - bash -x bin/run-ci-build.bash
+    - TIDYALL_DATA_DIR="$HOME/tidyall_d" bash -x bin/run-ci-build.bash
 END_OF_PROGRAM
        }
        elsif ($dzil)
