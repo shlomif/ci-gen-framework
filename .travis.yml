@@ -6,7 +6,6 @@ perl6:
   - latest
 install:
   - rakudobrew build zef
-  # - zef install --deps-only --/test .
   - ( cd perl6-CI-Gen/ && zef install --deps-only . )
 script:
   - ( cd perl6-CI-Gen/ && PERL6LIB=$PWD/lib prove -e perl6 -vr t/ )
