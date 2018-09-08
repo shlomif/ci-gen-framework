@@ -8,7 +8,7 @@
     "Config::INI",
     "Getopt::Long"
   ],
-  "description" : "A continuous integration scriptology generation framework",
+  "description" : "A Don't Repeat Yourself (DRY) framework for generating continuous integration scripts",
   "license" : "mit",
   "name" : "CI::Gen",
   "perl" : "6.c",

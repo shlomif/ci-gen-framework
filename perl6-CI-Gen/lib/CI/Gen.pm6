@@ -6,7 +6,7 @@ unit class CI::Gen:ver<0.0.1>:auth<cpan:SHLOMIF>;
 
 =head1 NAME
 
-CI::Gen - A continuous integration scriptology generation framework
+CI-Gen - A Don't Repeat Yourself (DRY) framework for generating continuous integration scripts
 
 =head1 SYNOPSIS
 
@@ -138,7 +138,7 @@ END_OF_PROGRAM
         return self!base-spurt(".travis.bash", self!gen-xml-g(param-name=>$param-name, pkgs=>@pkgs));
     }
 
-    method !xml-g-write-bash($param-name)
+    method !xml-g-write-bash(:$param-name)
     {
         return self!write-bash(
             param-name=>$param-name,
@@ -148,7 +148,7 @@ END_OF_PROGRAM
 
     method generate($name)
     {
-        if (not $.theme eq ('dzil'|'latemp'|'XML-Grammar-Fiction'|'XML-Grammar-Vered'))
+        if (not $.theme eq ('dzil'|'latemp'|'perl6'|'XML-Grammar-Fiction'|'XML-Grammar-Vered'))
         {
             die "unknown theme";
         }
@@ -170,11 +170,11 @@ EOF
 
         if ($.theme eq 'XML-Grammar-Fiction')
         {
-            self!xml-g-write-bash('screenplay_subdir');
+            self!xml-g-write-bash(param-name => 'screenplay_subdir');
         }
         if ($.theme eq 'XML-Grammar-Vered')
         {
-            self!xml-g-write-bash('subdirs');
+            self!xml-g-write-bash(param-name => 'subdirs');
         }
 
         my $travis-cache = q:to/END_OF_PROGRAM/;
@@ -319,6 +319,24 @@ install:
     - "(cd {$d} && dzil listdeps   --author --missing | grep -vP '[^\\\\w:]' | cpanm --verbose)"
 script:
     - "(cd {$d} && dzil smoke --release --author)"
+END_OF_PROGRAM
+        }
+        elsif ($.theme eq 'perl6')
+        {
+            my $d = $.params{'subdirs'};
+            self!write-travis-yml(q:c:to/END_OF_PROGRAM/);
+os:
+  - linux
+  - osx
+language: perl6
+perl6:
+  - latest
+install:
+  - rakudobrew build zef
+  - ( cd {$d} && zef install --deps-only . )
+script:
+  - ( cd {$d} && PERL6LIB=$PWD/lib prove -e perl6 -vr t/ )
+sudo: false
 END_OF_PROGRAM
         }
         else

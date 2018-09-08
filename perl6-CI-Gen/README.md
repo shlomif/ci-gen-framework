@@ -1,7 +1,7 @@
 NAME
 ====
 
-CI::Gen - A continuous integration scriptology generation framework
+CI-Gen - A Don't Repeat Yourself (DRY) framework for generating continuous integration scripts
 
 SYNOPSIS
 ========
