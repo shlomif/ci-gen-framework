@@ -229,7 +229,7 @@ END_OF_PROGRAM
        {
             my $d = $.params{'subdirs'};
 
-            my $p5-vers = <5.26 5.24 5.22 5.20 5.18 5.16 5.14>;
+            my @p5-vers = %.params{'p5-vers'} || <5.26 5.24 5.22 5.20 5.18 5.16 5.14>;
 
             self!base-spurt(".appveyor.yml", q:c:to/END_OF_PROGRAM/);
 environment:
@@ -303,7 +303,7 @@ sudo: false
 language: perl
 perl:
     - 'blead'
-{($p5-vers.map: -> $x {"    - '" ~ $x.Str ~"'\n"}).join('')}
+{(@p5-vers.map: -> $x {"    - '" ~ $x.Str ~"'\n"}).join('')}
 matrix:
     allow_failures:
         - perl: 'blead'
