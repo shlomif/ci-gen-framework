@@ -60,7 +60,7 @@ sub run-gen(@args) {
     # TEST
     test-e "$d/test-vered/.travis.yml", "basedir";
     # TEST
-    like(slurp("$d/test-vered/.travis.yml"), /^ cache\: /);
+    like(slurp("$d/test-vered/.travis.yml"), /^^ cache\: /);
 }
 
 {
