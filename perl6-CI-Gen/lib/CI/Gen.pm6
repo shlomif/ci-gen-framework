@@ -243,6 +243,8 @@ END_OF_PROGRAM
 
             my @p5-vers = (%.params{'p5-vers'} || '5.26 5.24 5.22 5.20 5.18 5.16 5.14').split(' ');
 
+            my @dzil-deps = <Dist::Zilla Pod::Weaver::Section::Support>;
+
             self!base-spurt(".appveyor.yml", q:c:to/END_OF_PROGRAM/);
 {self!gen-by-warning(syntax => 'yaml')}
 environment:
@@ -284,7 +286,7 @@ install:
     - cpanm -nq Getopt::Long::Descriptive
     - cpanm -nq Log::Dispatch::Output Software::LicenseUtils Config::MVP::Reader::INI Config::MVP::Assembler Text::Template Data::Section App::Cmd::Tester Log::Dispatchouli MooseX::Types::Perl String::Formatter MooseX::SetOnce CPAN::Uploader Config::MVP::Section Perl::PrereqScanner App::Cmd::Setup Config::MVP::Reader Software::License Config::MVP::Reader::Findable::ByExtension Config::MVP::Reader::Finder Pod::Eventual Mixin::Linewise::Readers Config::MVP::Assembler::WithBundles App::Cmd::Command::version Config::INI::Reader App::Cmd::Tester::CaptureExternal Term::Encoding
     - cpanm -nq Module::Build
-    - cpanm -nq Dist::Zilla
+    - cpanm -nq {@dzil-deps.join(' ')}
     # Module files for this distribution are not in root
     - cmd: "cd {$d}"
     - dzil authordeps | cpanm -nq
@@ -327,7 +329,7 @@ before_install:
     - cpanm local::lib
     - eval "$(perl -Mlocal::lib=$HOME/perl_modules)"
 install:
-    - cpanm --quiet --skip-satisfied Dist::Zilla Pod::Weaver::Section::Support
+    - cpanm --quiet --skip-satisfied {@dzil-deps.join(' ')}
     - "(cd {$d} && dzil authordeps          --missing | grep -vP '[^\\\\w:]' | xargs -n 5 -P 10 cpanm --quiet)"
     - "(cd {$d} && dzil listdeps   --author --missing | grep -vP '[^\\\\w:]' | cpanm --verbose)"
 script:
