@@ -30,6 +30,14 @@ my class Dir-wrapper
     method like-travis-yml($re) {
         return like(slurp(self.travis-yml()), $re);
     }
+
+    method ini() {
+        return "{self.dir()}/.ci-gen.ini";
+    }
+
+    method spew-ini($content) {
+        return spurt(self.ini(), $content);
+    }
 }
 
 {
@@ -86,14 +94,15 @@ sub run-gen(@args) {
 }
 
 {
-    IO::Path.new("$d/test-latemp-ini").mkdir;
-    spurt "$d/test-latemp-ini/.ci-gen.ini", "theme = latemp\n[param]\n\nsubdirs = .\n";
+    my $w = Dir-wrapper.new(sub => "test-latemp-ini");
+    IO::Path.new($w.dir).mkdir;
+    $w.spew-ini( "theme = latemp\n[param]\n\nsubdirs = .\n");
     run-gen(['--basedir', "$d/test-latemp-ini"]);
 
     # TEST
-    test-e "$d/test-latemp-ini/.travis.yml", "exe";
+    $w.test-travis-yml("exe");
     # TEST
-    test-e "$d/test-latemp-ini/.travis.bash", "exists";
+    test-e "{$w.dir}/.travis.bash", "exists";
 
 }
 done-testing;
