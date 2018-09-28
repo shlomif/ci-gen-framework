@@ -11,6 +11,27 @@ sub test-e(Str $var, Str $blurb) {
     return ok IO::Path.new($var).e, $blurb;
 }
 
+my class Dir-wrapper
+{
+    has Str $.sub;
+
+    method dir() {
+        return "$d/$.sub";
+    }
+
+    method travis-yml() {
+        return "{self.dir()}/.travis.yml";
+    }
+
+    method test-travis-yml($msg) {
+        return test-e self.travis-yml(), $msg;
+    }
+
+    method like-travis-yml($re) {
+        return like(slurp(self.travis-yml()), $re);
+    }
+}
+
 {
     CI::Gen::CI-Gen.new(
         basedir=>"$d/test1",
@@ -48,8 +69,9 @@ sub run-gen(@args) {
 }
 
 {
+    my $w = Dir-wrapper.new(sub => "test-vered");
     CI::Gen::CI-Gen.new(
-        basedir=>"$d/test-vered",
+        basedir => $w.dir(),
         params=>
         {
             subdirs => 'c-begin',
@@ -58,9 +80,9 @@ sub run-gen(@args) {
     ).generate('foo');
 
     # TEST
-    test-e "$d/test-vered/.travis.yml", "basedir";
+    $w.test-travis-yml( "basedir");
     # TEST
-    like(slurp("$d/test-vered/.travis.yml"), /^^ cache\: /);
+    $w.like-travis-yml( /^^ cache\: /);
 }
 
 {
