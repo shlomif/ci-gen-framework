@@ -363,7 +363,7 @@ before_install:
     - bash .travis.bash --cmd before_install
     - eval "$(perl -Mlocal::lib=$HOME/perl_modules)"
     - bash .travis.bash --cmd install
-    - cpanm File::Find::Object::Rule IO::All Path::Tiny XML::Grammar::Screenplay
+    - cpanm File::Find::Object::Rule HTML::T5 IO::All Path::Tiny XML::Grammar::Screenplay
     - git clone https://github.com/shlomif/screenplays-common
 perl:
     - "5.26"
