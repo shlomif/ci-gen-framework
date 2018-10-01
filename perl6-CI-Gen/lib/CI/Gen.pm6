@@ -198,7 +198,7 @@ END_OF_PROGRAM
 
        if ($.theme eq 'latemp')
        {
-            self!write-bash(param-name=>'subdirs', pkgs=><ack-grep asciidoc build-essential cmake cpanminus dbtoepub docbook-defguide docbook-xsl docbook-xsl-ns fortune-mod hunspell inkscape myspell-en-gb libdb5.3-dev libgd-dev libhunspell-dev libncurses-dev libpcre3-dev libperl-dev mercurial myspell-en-gb lynx optipng perl python3 python3-setuptools python3-pip silversearcher-ag tidy valgrind wml xsltproc xz-utils zip>);
+            self!write-bash(param-name=>'subdirs', pkgs=><ack-grep asciidoc build-essential cmake cpanminus dbtoepub docbook-defguide docbook-xsl docbook-xsl-ns fortune-mod hunspell inkscape myspell-en-gb libdb5.3-dev libgd-dev libhunspell-dev libncurses-dev libpcre3-dev libperl-dev libxml2-dev mercurial myspell-en-gb lynx optipng perl python3 python3-setuptools python3-pip silversearcher-ag tidy valgrind wml xsltproc xz-utils zip>);
             self!write-travis-yml(q:c:to/END_OF_PROGRAM/);
 {$travis-cache}
 os: linux
@@ -218,7 +218,7 @@ before_install:
     - bash bin/install-git-cmakey-program-system-wide.bash 'git' 'installer' 'https://github.com/thewml/latemp.git'
     - deps-app plinst -i bin/required-modules.yml
     - gem install asciidoctor compass compass-blueprint
-    - sudo -H `which python3` -m pip install beautifulsoup4 bs4 cookiecutter Zenfilter
+    - sudo -H `which python3` -m pip install beautifulsoup4 bs4 cookiecutter lxml Zenfilter
     - a='latemp' ; v='0.10.2' ; b="$a-$v" ; arc="$b.tar.xz"; ( wget http://web-cpan.shlomifish.org/latemp/download/"$arc" && tar -xvf "$arc" && (cd "$b" && mkdir b && cd b && cmake .. && make && sudo make install) && rm -fr "$b" )
     - ( cd .. && git clone https://github.com/thewml/wml-extended-apis.git && cd wml-extended-apis/xhtml/1.x && bash Install.bash )
     - ( cd .. && git clone https://github.com/thewml/latemp.git && cd latemp/support-headers && perl install.pl )
