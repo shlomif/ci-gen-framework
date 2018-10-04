@@ -204,7 +204,7 @@ END_OF_PROGRAM
 os: linux
 dist: trusty
 before_install:
-    - bash .travis.bash --cmd before_install
+    - . .travis.bash --cmd before_install
     - go get -u github.com/tdewolff/minify/cmd/minify
     - eval "$(perl -Mlocal::lib=$HOME/perl_modules)"
     - cpanm Alien::Tidyp App::Deps::Verify App::XML::DocBook::Builder Pod::Xhtml
@@ -361,9 +361,9 @@ END_OF_PROGRAM
 os: linux
 dist: trusty
 before_install:
-    - bash .travis.bash --cmd before_install
+    - . .travis.bash --cmd before_install
     - eval "$(perl -Mlocal::lib=$HOME/perl_modules)"
-    - bash .travis.bash --cmd install
+    - . .travis.bash --cmd install
     - cpanm File::Find::Object::Rule HTML::T5 IO::All Path::Tiny XML::Grammar::Screenplay
     - git clone https://github.com/shlomif/screenplays-common
 perl:
@@ -371,7 +371,7 @@ perl:
 python:
     - "3.6"
 script:
-    - bash .travis.bash --cmd build
+    - . .travis.bash --cmd build
 sudo: required
 END_OF_PROGRAM
         }
