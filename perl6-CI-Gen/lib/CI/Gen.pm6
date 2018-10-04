@@ -233,6 +233,7 @@ before_install:
     - bash -x bin/install-npm-deps.sh
     - sudo ln -s /usr/bin/make /usr/bin/gmake
 script:
+    - export XML_CATALOG_FILES="/etc/xml/catalog $HOME/markup-validator/htdocs/sgml-lib/catalog.xml"
     - TIDYALL_DATA_DIR="$HOME/tidyall_d" bash -x bin/run-ci-build.bash
 END_OF_PROGRAM
        }
