@@ -364,7 +364,7 @@ before_install:
     - . .travis.bash --cmd before_install
     - eval "$(perl -Mlocal::lib=$HOME/perl_modules)"
     - . .travis.bash --cmd install
-    - cpanm File::Find::Object::Rule HTML::T5 IO::All Path::Tiny {$.theme eq 'XML-Grammar-Vered' ?? 'XML::Grammar::Vered' !! 'XML::Grammar::Screenplay'}
+    - cpanm App::XML::DocBook::Builder File::Find::Object::Rule HTML::T5 IO::All Path::Tiny {$.theme eq 'XML-Grammar-Vered' ?? 'XML::Grammar::Vered' !! 'XML::Grammar::Screenplay'}
     - git clone https://github.com/shlomif/screenplays-common
 perl:
     - "5.26"
