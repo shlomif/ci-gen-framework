@@ -82,7 +82,7 @@ EOF
         return <sudo apt-get --no-install-recommends install -y>;
     }
 
-    method !gen-xml-g(:$param-name, :@pkgs) {
+    method !gen-xml-g(:$param-name, :@pkgs, :%extra_stages) {
         my $travis-bash-prefix = q:c:to/EOF/;
 #! /bin/bash
 #
@@ -106,6 +106,13 @@ if false
 then
     :
 EOF
+
+        my $before_install = %extra_stages{'before_install'}:exists ?? %extra_stages{'before_install'} !! '';
+        if ($before_install)
+        {
+            $before_install ~~ s:g:P5:m/^/    /;
+        }
+
         my $xmlg-before-install = q:c:to/EOF/;
 elif test "$cmd" = "before_install"
 then
@@ -113,6 +120,7 @@ then
     {self!apt-get-inst()} {@pkgs}
     sudo dpkg-divert --local --divert /usr/bin/ack --rename --add /usr/bin/ack-grep
     cpanm local::lib
+{$before_install}
 EOF
 
         my $xmlg-install = q:to/EOF/;
@@ -122,6 +130,8 @@ EOF
     mkdir -p "$h"
     git clone https://github.com/shlomif/shlomi-fish-homepage "$h/trunk"
 EOF
+
+
         return q:c:to/END_OF_PROGRAM/
 {$travis-bash-prefix}
 {$xmlg-before-install}
@@ -143,11 +153,12 @@ then
     m test
 fi
 END_OF_PROGRAM
+
     }
 
-    method !write-bash(:$param-name, :@pkgs)
+    method !write-bash(:$param-name, :@pkgs, :%extra_stages = {})
     {
-        return self!base-spurt(".travis.bash", self!gen-xml-g(param-name=>$param-name, pkgs=>@pkgs));
+        return self!base-spurt(".travis.bash", self!gen-xml-g(param-name=>$param-name, pkgs=>@pkgs, extra_stages=>%extra_stages));
     }
 
     method !xml-g-write-bash(:$param-name)
@@ -198,40 +209,45 @@ END_OF_PROGRAM
 
        if ($.theme eq 'latemp')
        {
-            self!write-bash(param-name=>'subdirs', pkgs=><ack-grep asciidoc build-essential cmake cpanminus dbtoepub docbook-defguide docbook-xsl docbook-xsl-ns fortune-mod hunspell inkscape myspell-en-gb libdb5.3-dev libgd-dev libhunspell-dev libncurses-dev libpcre3-dev libperl-dev libxml2-dev mercurial myspell-en-gb lynx optipng perl python3 python3-setuptools python3-pip silversearcher-ag tidy valgrind wml xsltproc xz-utils zip>);
+            self!write-bash(param-name=>'subdirs', pkgs=><ack-grep asciidoc build-essential cmake cpanminus dbtoepub docbook-defguide docbook-xsl docbook-xsl-ns fortune-mod hunspell inkscape myspell-en-gb libdb5.3-dev libgd-dev libhunspell-dev libncurses-dev libpcre3-dev libperl-dev libxml2-dev mercurial myspell-en-gb lynx optipng perl python3 python3-setuptools python3-pip silversearcher-ag tidy valgrind wml xsltproc xz-utils zip>,
+            extra_stages => {
+                'before_install' => q:c:to/END/,
+go get -u github.com/tdewolff/minify/cmd/minify
+eval "$(perl -Mlocal::lib=$HOME/perl_modules)"
+cpanm Alien::Tidyp App::Deps::Verify App::XML::DocBook::Builder Pod::Xhtml
+cpanm --notest HTML::Tidy
+cpanm HTML::T5
+# For wml
+cpanm --notest Bit::Vector Class::XSAccessor GD Getopt::Long IO::All Image::Size Term::ReadKey
+# For quadp
+cpanm --notest Class::XSAccessor Config::IniFiles HTML::Links::Localize
+bash bin/install-git-cmakey-program-system-wide.bash 'git' 'src' 'https://github.com/thewml/website-meta-language.git'
+bash bin/install-git-cmakey-program-system-wide.bash 'git' 'installer' 'https://github.com/thewml/latemp.git'
+deps-app plinst -i bin/required-modules.yml
+gem install asciidoctor compass compass-blueprint
+sudo -H `which python3` -m pip install beautifulsoup4 bs4 cookiecutter lxml pycotap vnu_validator Zenfilter
+a='latemp' ; v='0.10.2' ; b="$a-$v" ; arc="$b.tar.xz"; ( wget http://web-cpan.shlomifish.org/latemp/download/"$arc" && tar -xvf "$arc" && (cd "$b" && mkdir b && cd b && cmake .. && make && sudo make install) && rm -fr "$b" )
+( cd .. && git clone https://github.com/thewml/wml-extended-apis.git && cd wml-extended-apis/xhtml/1.x && bash Install.bash )
+( cd .. && git clone https://github.com/thewml/latemp.git && cd latemp/support-headers && perl install.pl )
+( cd .. && git clone https://github.com/shlomif/wml-affiliations.git && cd wml-affiliations/wml && bash Install.bash )
+bash -x bin/install-npm-deps.sh
+bash -x bin/install-tidyp-systemwide.bash
+bash bin/install-git-cmakey-program-system-wide.bash 'git' 'installer' 'https://github.com/shlomif/quad-pres'
+{q«echo '{"amazon_sak":"invalid"}' > "$HOME"/.shlomifish-amazon-sak.json»}
+( cd "$HOME" && git clone https://github.com/w3c/markup-validator.git )
+pwd
+echo "HOME=$HOME"
+bash -x bin/install-npm-deps.sh
+sudo ln -s /usr/bin/make /usr/bin/gmake
+END
+            },
+        );
             self!write-travis-yml(q:c:to/END_OF_PROGRAM/);
 {$travis-cache}
 os: linux
 dist: trusty
 before_install:
     - . .travis.bash --cmd before_install
-    - go get -u github.com/tdewolff/minify/cmd/minify
-    - eval "$(perl -Mlocal::lib=$HOME/perl_modules)"
-    - cpanm Alien::Tidyp App::Deps::Verify App::XML::DocBook::Builder Pod::Xhtml
-    - cpanm --notest HTML::Tidy
-    - cpanm HTML::T5
-    # For wml
-    - cpanm --notest Bit::Vector Class::XSAccessor GD Getopt::Long IO::All Image::Size Term::ReadKey
-    # For quadp
-    - cpanm --notest Class::XSAccessor Config::IniFiles HTML::Links::Localize
-    - bash bin/install-git-cmakey-program-system-wide.bash 'git' 'src' 'https://github.com/thewml/website-meta-language.git'
-    - bash bin/install-git-cmakey-program-system-wide.bash 'git' 'installer' 'https://github.com/thewml/latemp.git'
-    - deps-app plinst -i bin/required-modules.yml
-    - gem install asciidoctor compass compass-blueprint
-    - sudo -H `which python3` -m pip install beautifulsoup4 bs4 cookiecutter lxml pycotap vnu_validator Zenfilter
-    - a='latemp' ; v='0.10.2' ; b="$a-$v" ; arc="$b.tar.xz"; ( wget http://web-cpan.shlomifish.org/latemp/download/"$arc" && tar -xvf "$arc" && (cd "$b" && mkdir b && cd b && cmake .. && make && sudo make install) && rm -fr "$b" )
-    - ( cd .. && git clone https://github.com/thewml/wml-extended-apis.git && cd wml-extended-apis/xhtml/1.x && bash Install.bash )
-    - ( cd .. && git clone https://github.com/thewml/latemp.git && cd latemp/support-headers && perl install.pl )
-    - ( cd .. && git clone https://github.com/shlomif/wml-affiliations.git && cd wml-affiliations/wml && bash Install.bash )
-    - bash -x bin/install-npm-deps.sh
-    - bash -x bin/install-tidyp-systemwide.bash
-    - bash bin/install-git-cmakey-program-system-wide.bash 'git' 'installer' 'https://github.com/shlomif/quad-pres'
-    {q«- echo '{"amazon_sak":"invalid"}' > "$HOME"/.shlomifish-amazon-sak.json»}
-    - ( cd "$HOME" && git clone https://github.com/w3c/markup-validator.git )
-    - pwd
-    - echo "HOME=$HOME"
-    - bash -x bin/install-npm-deps.sh
-    - sudo ln -s /usr/bin/make /usr/bin/gmake
 script:
     - export XML_CATALOG_FILES="/etc/xml/catalog $HOME/markup-validator/htdocs/sgml-lib/catalog.xml"
     - TIDYALL_DATA_DIR="$HOME/tidyall_d" bash -x bin/run-ci-build.bash
