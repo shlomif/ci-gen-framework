@@ -126,6 +126,7 @@ EOF
         my $xmlg-install = q:to/EOF/;
     bash -x bin/install-tidyp-systemwide.bash
     cpanm --notest HTML::Tidy
+    cpanm HTML::T5
     h=~/Docs/homepage/homepage
     mkdir -p "$h"
     git clone https://github.com/shlomif/shlomi-fish-homepage "$h/trunk"
