@@ -5,12 +5,11 @@ use Getopt::Long;
 
 use CI::Gen;
 my %params;
-my $o = Getopt::Long.new(
+my $ret = get-options-from(@*ARGS,
     'basedir=s',
     'param=s%',
     'theme=s',
 );
-my $ret = $o.get-options(@*ARGS);
 my $basedir = ($ret.{'basedir'} || '.');
 my $ini-bn = ".ci-gen.ini";
 my $ini = "$basedir/$ini-bn";
