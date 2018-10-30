@@ -331,6 +331,10 @@ END_OF_PROGRAM
             self!write-travis-yml(q:c:to/END_OF_PROGRAM/);
 {$travis-cache}
 sudo: false
+addons:
+    apt:
+        packages:
+            - libhunspell-dev
 language: perl
 perl:
     - 'blead'
