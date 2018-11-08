@@ -69,6 +69,11 @@ our class CI-Gen
 EOF
     }
 
+    method !calc-golang-version()
+    {
+        return '1.11';
+    }
+
     method !write-travis-yml($contents)
     {
         my $fn = ".travis.yml";
@@ -213,6 +218,7 @@ END_OF_PROGRAM
             self!write-bash(param-name=>'subdirs', pkgs=><ack-grep asciidoc build-essential cmake cpanminus dbtoepub docbook-defguide docbook-xsl docbook-xsl-ns fortune-mod hunspell inkscape myspell-en-gb libdb5.3-dev libgd-dev libhunspell-dev libncurses-dev libpcre3-dev libperl-dev libxml2-dev mercurial myspell-en-gb lynx optipng perl python3 python3-setuptools python3-pip silversearcher-ag tidy valgrind wml xsltproc xz-utils zip>,
             extra_stages => {
                 'before_install' => q:c:to/END/,
+eval "$(GIMME_GO_VERSION={self!calc-golang-version()} gimme)"
 go get -u github.com/tdewolff/minify/cmd/minify
 eval "$(perl -Mlocal::lib=$HOME/perl_modules)"
 cpanm Alien::Tidyp App::Deps::Verify App::XML::DocBook::Builder Pod::Xhtml
@@ -244,6 +250,8 @@ END
         );
             self!write-travis-yml(q:c:to/END_OF_PROGRAM/);
 {$travis-cache}
+go:
+    - '{self!calc-golang-version()}.x'
 os: linux
 dist: trusty
 before_install:
