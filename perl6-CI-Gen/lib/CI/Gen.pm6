@@ -123,7 +123,14 @@ elif test "$cmd" = "before_install"
 then
     sudo apt-get update -qq
     {self!apt-get-inst()} {@pkgs}
-    sudo dpkg-divert --local --divert /usr/bin/ack --rename --add /usr/bin/ack-grep
+    . /etc/lsb-release
+    if test "$DISTRIB_ID" = 'Ubuntu'
+    then
+        if test "$DISTRIB_RELEASE" = '14.04'
+        then
+            sudo dpkg-divert --local --divert /usr/bin/ack --rename --add /usr/bin/ack-grep
+        fi
+    fi
     cpanm local::lib
 {$before_install}
 EOF
