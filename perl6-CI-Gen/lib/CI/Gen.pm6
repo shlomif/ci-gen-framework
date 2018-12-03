@@ -253,7 +253,7 @@ END
 go:
     - '{self!calc-golang-version()}.x'
 os: linux
-dist: trusty
+dist: xenial
 before_install:
     - . .travis.bash --cmd before_install
 script:
