@@ -142,6 +142,8 @@ EOF
     h=~/Docs/homepage/homepage
     mkdir -p "$h"
     git clone https://github.com/shlomif/shlomi-fish-homepage "$h/trunk"
+    sudo -H `which python3` -m pip install cookiecutter
+    ( cd "$h/trunk" && perl bin/my-cookiecutter.pl )
 EOF
 
 
@@ -178,7 +180,7 @@ END_OF_PROGRAM
     {
         return self!write-bash(
             param-name=>$param-name,
-            pkgs=><ack-grep cpanminus dbtoepub docbook-defguide docbook-xsl libperl-dev libxml-libxml-perl libxml-libxslt-perl make perl tidy xsltproc>
+            pkgs=><ack-grep cpanminus dbtoepub docbook-defguide docbook-xsl libperl-dev libxml-libxml-perl libxml-libxslt-perl make perl python3-pip python3-setuptools tidy xsltproc>
         );
     }
 
