@@ -397,7 +397,7 @@ END_OF_PROGRAM
             self!write-travis-yml(q:c:to/END_OF_PROGRAM/);
 {$travis-cache}
 os: linux
-dist: trusty
+dist: xenial
 before_install:
     - . .travis.bash --cmd before_install
     - eval "$(perl -Mlocal::lib=$HOME/perl_modules)"
