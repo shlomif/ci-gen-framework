@@ -136,7 +136,6 @@ then
 EOF
 
         my $xmlg-install = q:to/EOF/;
-    bash -x bin/install-tidyp-systemwide.bash
     cpanm --notest HTML::Tidy
     cpanm HTML::T5
     h=~/Docs/homepage/homepage
@@ -191,20 +190,6 @@ END_OF_PROGRAM
             die "unknown theme";
         }
         my $dzil = ($.theme eq 'dzil');
-        self!base-spurt("bin/install-tidyp-systemwide.bash", q:to/EOF/);
-#!/bin/bash
-
-set -x
-
-bdir="$HOME/tidyp-build"
-mkdir -p "$bdir"
-cd "$bdir"
-wget https://github.com/downloads/petdance/tidyp/tidyp-1.04.tar.gz
-tar -xf tidyp-1.04.tar.gz
-cd tidyp-1.04
-./configure && make && sudo make install && sudo ldconfig
-EOF
-
 
         if ($.theme eq 'XML-Grammar-Fiction')
         {
@@ -247,7 +232,6 @@ gem install asciidoctor compass compass-blueprint
 ( cd .. && git clone https://github.com/thewml/latemp.git && cd latemp/support-headers && perl install.pl )
 ( cd .. && git clone https://github.com/shlomif/wml-affiliations.git && cd wml-affiliations/wml && bash Install.bash )
 bash -x bin/install-npm-deps.sh
-bash -x bin/install-tidyp-systemwide.bash
 bash bin/install-git-cmakey-program-system-wide.bash 'git' 'installer' 'https://github.com/shlomif/quad-pres'
 {q«echo '{"amazon_sak":"invalid"}' > "$HOME"/.shlomifish-amazon-sak.json»}
 ( cd "$HOME" && git clone https://github.com/w3c/markup-validator.git )
