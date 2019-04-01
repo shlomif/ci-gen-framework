@@ -257,7 +257,7 @@ END_OF_PROGRAM
        }
        elsif ($dzil)
        {
-            my $d = $.params{'subdirs'};
+            my @d = %.params{'subdirs'}.split(' ');
 
             my @p5-vers = (%.params{'p5-vers'} || '5.26 5.24 5.22 5.20 5.18 5.16 5.14').split(' ');
 
@@ -306,7 +306,7 @@ install:
     - cpanm -nq Module::Build
     - cpanm -nq {@dzil-deps.join(' ')}
     # Module files for this distribution are not in root
-    - cmd: "cd {$d}"
+    - cmd: "cd {@d}"
     - dzil authordeps | cpanm -nq
     - dzil listdeps   | cpanm -nq
     - cpanm -nq Test::EOL Test::NoTabs Test::Pod Test::Pod::Coverage Pod::Coverage::TrustPod
@@ -352,10 +352,11 @@ before_install:
     - eval "$(perl -Mlocal::lib=$HOME/perl_modules)"
 install:
     - cpanm --quiet --skip-satisfied {@dzil-deps.join(' ')}
-    - "(cd {$d} && dzil authordeps          --missing | grep -vP '[^\\\\w:]' | xargs -n 5 -P 10 cpanm --quiet)"
-    - "(cd {$d} && dzil listdeps   --author --missing | grep -vP '[^\\\\w:]' | cpanm --verbose)"
+    - export _dzil_dirs="{@d}"
+    - "for d in $_dzil_dirs ; do (cd $d && dzil authordeps          --missing | grep -vP '[^\\\\w:]' | xargs -n 5 -P 10 cpanm --quiet) ; done"
+    - "for d in $_dzil_dirs ; do (cd $d && dzil listdeps   --author --missing | grep -vP '[^\\\\w:]' | cpanm --verbose) ; done"
 script:
-    - "(cd {$d} && dzil smoke --release --author)"
+    - "for d in $_dzil_dirs ; (cd $d && dzil smoke --release --author) || exit -1 ; done"
 END_OF_PROGRAM
         }
         elsif ($.theme eq 'perl6')
