@@ -353,10 +353,10 @@ before_install:
 install:
     - cpanm --quiet --skip-satisfied {@dzil-deps.join(' ')}
     - export _dzil_dirs="{@d}"
-    - "for d in $_dzil_dirs ; do (cd $d && dzil authordeps          --missing | grep -vP '[^\\\\w:]' | xargs -n 5 -P 10 cpanm --quiet) ; done"
-    - "for d in $_dzil_dirs ; do (cd $d && dzil listdeps   --author --missing | grep -vP '[^\\\\w:]' | cpanm --verbose) ; done"
+    - "for d in $_dzil_dirs ; do (cd \"$d\" && dzil authordeps          --missing | grep -vP '[^\\\\w:]' | xargs -n 5 -P 10 cpanm --quiet) ; done"
+    - "for d in $_dzil_dirs ; do (cd \"$d\" && dzil listdeps   --author --missing | grep -vP '[^\\\\w:]' | cpanm --verbose) ; done"
 script:
-    - "for d in $_dzil_dirs ; (cd $d && dzil smoke --release --author) || exit -1 ; done"
+    - "for d in $_dzil_dirs ; do (cd \"$d\" && dzil smoke --release --author) || exit -1 ; done"
 END_OF_PROGRAM
         }
         elsif ($.theme eq 'perl6')
