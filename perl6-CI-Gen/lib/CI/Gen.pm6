@@ -87,7 +87,7 @@ EOF
         return <sudo apt-get --no-install-recommends install -y>;
     }
 
-    method !gen-xml-g(:$param-name, :@pkgs, :%extra_stages) {
+    method !gen-xml-g(:$param-name, :@pkgs, :%extra_stages, :$xmlg-install is copy) {
         my $travis-bash-prefix = q:c:to/EOF/;
 #! /bin/bash
 #
@@ -135,7 +135,10 @@ then
 {$before_install}
 EOF
 
-        my $xmlg-install = q:to/EOF/;
+        $xmlg-install //= q:to/EOF/;
+elif test "$cmd" = "install"
+then
+    cpanm --notest Alien::Tidyp YAML::XS
     cpanm --notest HTML::Tidy
     cpanm HTML::T5
     h=~/Docs/homepage/homepage
@@ -149,9 +152,6 @@ EOF
         return q:c:to/END_OF_PROGRAM/
 {$travis-bash-prefix}
 {$xmlg-before-install}
-elif test "$cmd" = "install"
-then
-    cpanm --notest Alien::Tidyp YAML::XS
 {$xmlg-install}
 elif test "$cmd" = "build"
 then
@@ -170,9 +170,9 @@ END_OF_PROGRAM
 
     }
 
-    method !write-bash(:$param-name, :@pkgs, :%extra_stages = {})
+    method !write-bash(:$param-name, :@pkgs, :%extra_stages = {}, :$xmlg-install is copy)
     {
-        return self!base-spurt(".travis.bash", self!gen-xml-g(param-name=>$param-name, pkgs=>@pkgs, extra_stages=>%extra_stages));
+        return self!base-spurt(".travis.bash", self!gen-xml-g(param-name=>$param-name, pkgs=>@pkgs, extra_stages=>%extra_stages, xmlg-install=>$xmlg-install));
     }
 
     method !xml-g-write-bash(:$param-name)
@@ -209,7 +209,7 @@ END_OF_PROGRAM
 
        if ($.theme eq 'latemp')
        {
-            self!write-bash(param-name=>'subdirs', pkgs=><ack-grep asciidoc build-essential cmake cpanminus dbtoepub docbook-defguide docbook-xsl docbook-xsl-ns fortune-mod graphicsmagick hunspell inkscape myspell-en-gb libdb5.3-dev libgd-dev libhunspell-dev libncurses-dev libpcre3-dev libperl-dev libxml2-dev mercurial myspell-en-gb lynx optipng perl python3 python3-setuptools python3-pip silversearcher-ag strip-nondeterminism tidy valgrind wml xsltproc xz-utils zip>,
+            self!write-bash(xmlg-install=>"", param-name=>'subdirs', pkgs=><ack-grep asciidoc build-essential cmake cpanminus dbtoepub docbook-defguide docbook-xsl docbook-xsl-ns fortune-mod graphicsmagick hunspell inkscape myspell-en-gb libdb5.3-dev libgd-dev libhunspell-dev libncurses-dev libpcre3-dev libperl-dev libxml2-dev mercurial myspell-en-gb lynx optipng perl python3 python3-setuptools python3-pip silversearcher-ag strip-nondeterminism tidy valgrind wml xsltproc xz-utils zip>,
             extra_stages => {
                 'before_install' => q:c:to/END/,
 eval "$(GIMME_GO_VERSION={self!calc-golang-version()} gimme)"

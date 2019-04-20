@@ -3,7 +3,7 @@ use Test;
 use File::Temp;
 use CI::Gen;
 
-plan 8;
+plan 9;
 
 my $d = tempdir;
 
@@ -19,6 +19,9 @@ my class Dir-wrapper
         return "$d/$.sub";
     }
 
+    method travis-bash() {
+        return "{self.dir()}/.travis.bash";
+    }
     method travis-yml() {
         return "{self.dir()}/.travis.yml";
     }
@@ -27,6 +30,9 @@ my class Dir-wrapper
         return test-e self.travis-yml(), $msg;
     }
 
+    method unlike-travis-bash($re) {
+        return unlike(slurp(self.travis-bash()), $re);
+    }
     method like-travis-yml($re) {
         return like(slurp(self.travis-yml()), $re);
     }
@@ -103,6 +109,8 @@ sub run-gen(@args) {
     $w.test-travis-yml("exe");
     # TEST
     test-e "{$w.dir}/.travis.bash", "exists";
+    # TEST
+    $w.unlike-travis-bash( /\"install\"/);
 
 }
 done-testing;
