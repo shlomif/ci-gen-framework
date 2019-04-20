@@ -74,12 +74,17 @@ EOF
         return '1.11';
     }
 
-    method !write-travis-yml($contents)
+    method !write-travis-yml(:@pkgs, :$contents)
     {
+        my $s = "";
+        if (@pkgs)
+        {
+            $s = "addons:\n    apt:\n        packages:\n" ~ (@pkgs.map: -> $x {(" " x 12) ~ "- $x\n"}).join('');
+        }
         my $fn = ".travis.yml";
         return self!base-spurt(
             $fn,
-            self!gen-by-warning(syntax => 'yaml') ~ $contents
+            self!gen-by-warning(syntax => 'yaml') ~ $s ~ $contents
         );
     }
 
@@ -117,12 +122,13 @@ EOF
         {
             $before_install ~~ s:g:P5:m/^/    /;
         }
+        my $apt_str = @pkgs ??
+    "   sudo apt-get update -qq\n    {self!apt-get-inst()} {@pkgs}\n" !! "";
 
         my $xmlg-before-install = q:c:to/EOF/;
 elif test "$cmd" = "before_install"
 then
-    sudo apt-get update -qq
-    {self!apt-get-inst()} {@pkgs}
+{$apt_str}
     . /etc/lsb-release
     if test "$DISTRIB_ID" = 'Ubuntu'
     then
@@ -209,7 +215,7 @@ END_OF_PROGRAM
 
        if ($.theme eq 'latemp')
        {
-            self!write-bash(xmlg-install=>"", param-name=>'subdirs', pkgs=><ack-grep asciidoc build-essential cmake cpanminus dbtoepub docbook-defguide docbook-xsl docbook-xsl-ns fortune-mod graphicsmagick hunspell inkscape myspell-en-gb libdb5.3-dev libgd-dev libhunspell-dev libncurses-dev libpcre3-dev libperl-dev libxml2-dev mercurial myspell-en-gb lynx optipng perl python3 python3-setuptools python3-pip silversearcher-ag strip-nondeterminism tidy valgrind wml xsltproc xz-utils zip>,
+            self!write-bash(xmlg-install=>"", param-name=>'subdirs',
             extra_stages => {
                 'before_install' => q:c:to/END/,
 eval "$(GIMME_GO_VERSION={self!calc-golang-version()} gimme)"
@@ -242,7 +248,7 @@ sudo ln -s /usr/bin/make /usr/bin/gmake
 END
             },
         );
-            self!write-travis-yml(q:c:to/END_OF_PROGRAM/);
+            self!write-travis-yml(pkgs=><ack-grep asciidoc build-essential cmake cpanminus dbtoepub docbook-defguide docbook-xsl docbook-xsl-ns fortune-mod graphicsmagick hunspell inkscape myspell-en-gb libdb5.3-dev libgd-dev libhunspell-dev libncurses-dev libpcre3-dev libperl-dev libxml2-dev mercurial myspell-en-gb lynx optipng perl python3 python3-setuptools python3-pip silversearcher-ag strip-nondeterminism tidy valgrind wml xsltproc xz-utils zip>, contents=>q:c:to/END_OF_PROGRAM/);
 {$travis-cache}
 go:
     - '{self!calc-golang-version()}.x'
@@ -330,7 +336,7 @@ matrix:
           version: "5.24.1.2402"
 END_OF_PROGRAM
 
-            self!write-travis-yml(q:c:to/END_OF_PROGRAM/);
+            self!write-travis-yml(contents=>q:c:to/END_OF_PROGRAM/);
 {$travis-cache}
 sudo: false
 addons:
@@ -362,7 +368,7 @@ END_OF_PROGRAM
         elsif ($.theme eq 'perl6')
         {
             my $d = $.params{'subdirs'};
-            self!write-travis-yml(q:c:to/END_OF_PROGRAM/);
+            self!write-travis-yml(contents=>q:c:to/END_OF_PROGRAM/);
 os:
   - linux
   - osx
@@ -379,7 +385,7 @@ END_OF_PROGRAM
         }
         else
         {
-            self!write-travis-yml(q:c:to/END_OF_PROGRAM/);
+            self!write-travis-yml(contents=>q:c:to/END_OF_PROGRAM/);
 {$travis-cache}
 os: linux
 dist: xenial
