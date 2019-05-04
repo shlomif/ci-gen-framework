@@ -184,7 +184,6 @@ END_OF_PROGRAM
     {
         return self!write-bash(
             param-name=>$param-name,
-            pkgs=><ack-grep cpanminus dbtoepub docbook-defguide docbook-xsl libperl-dev libxml-libxml-perl libxml-libxslt-perl make perl python3-pip python3-setuptools tidy xsltproc>
         );
     }
 
@@ -383,7 +382,9 @@ END_OF_PROGRAM
         }
         else
         {
-            self!write-travis-yml(contents=>q:c:to/END_OF_PROGRAM/);
+            self!write-travis-yml(
+                pkgs=><ack-grep cpanminus dbtoepub docbook-defguide docbook-xsl libperl-dev libxml-libxml-perl libxml-libxslt-perl make perl python3-pip python3-setuptools tidy xsltproc>,
+                contents=>q:c:to/END_OF_PROGRAM/);
 {$travis-cache}
 os: linux
 dist: xenial
