@@ -47,7 +47,7 @@ This library is free software; you can redistribute it and/or modify it under th
 
 =end pod
 
-my $local-lib-eval = 'eval "$(perl -I ~/perl_modules/lib/perl5 -Mlocal::lib=$HOME/perl_modules)';
+my $local-lib-eval = 'eval "$(perl -I ~/perl_modules/lib/perl5 -Mlocal::lib=$HOME/perl_modules)"';
 
 our class CI-Gen
 {

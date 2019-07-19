@@ -3,7 +3,7 @@ use Test;
 use File::Temp;
 use CI::Gen;
 
-plan 9;
+plan 11;
 
 my $d = tempdir;
 
@@ -32,6 +32,9 @@ my class Dir-wrapper
 
     method unlike-travis-bash($re) {
         return unlike(slurp(self.travis-bash()), $re);
+    }
+    method contains-travis-yml($substr) {
+        return ok(slurp(self.travis-yml()).contains($substr));
     }
     method like-travis-yml($re) {
         return like(slurp(self.travis-yml()), $re);
@@ -82,6 +85,22 @@ sub run-gen(@args) {
     test-e "$d/test-latemp/.travis.yml", "exe";
 }
 
+{
+    my $w = Dir-wrapper.new(sub => "test-dzil-1");
+    CI::Gen::CI-Gen.new(
+        basedir => $w.dir(),
+        params=>
+        {
+            subdirs => 'Test-Count',
+        },
+        theme => "dzil",
+    ).generate('foo');
+
+    # TEST
+    $w.test-travis-yml( "basedir");
+    # TEST
+    $w.contains-travis-yml( 'eval "$(perl -I ~/perl_modules/lib/perl5 -Mlocal::lib=$HOME/perl_modules)"' );
+}
 {
     my $w = Dir-wrapper.new(sub => "test-vered");
     CI::Gen::CI-Gen.new(
