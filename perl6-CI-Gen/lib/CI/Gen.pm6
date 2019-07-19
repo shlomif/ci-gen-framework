@@ -47,6 +47,8 @@ This library is free software; you can redistribute it and/or modify it under th
 
 =end pod
 
+my $local-lib-eval = 'eval "$(perl -I ~/perl_modules/lib/perl5 -Mlocal::lib=$HOME/perl_modules)';
+
 our class CI-Gen
 {
     has Str $.basedir;
@@ -137,7 +139,7 @@ then
             sudo dpkg-divert --local --divert /usr/bin/ack --rename --add /usr/bin/ack-grep
         fi
     fi
-    cpanm local::lib
+    cpanm --local-lib=~/perl_modules local::lib
 {$before_install}
 EOF
 
@@ -218,7 +220,7 @@ END_OF_PROGRAM
                 'before_install' => q:c:to/END/,
 eval "$(GIMME_GO_VERSION={self!calc-golang-version()} gimme)"
 go get -u github.com/tdewolff/minify/cmd/minify
-eval "$(perl -Mlocal::lib=$HOME/perl_modules)"
+{$local-lib-eval}
 cpanm App::Deps::Verify App::XML::DocBook::Builder Pod::Xhtml
 cpanm HTML::T5
 # For wml
@@ -351,8 +353,8 @@ matrix:
 before_install:
     - git config --global user.name "TravisCI"
     - git config --global user.email $HOSTNAME":not-for-mail@travis-ci.org"
-    - cpanm local::lib
-    - eval "$(perl -Mlocal::lib=$HOME/perl_modules)"
+    - cpanm --local-lib=~/perl_modules local::lib
+    - {$local-lib-eval}
 install:
     - cpanm --quiet --skip-satisfied {@dzil-deps.join(' ')}
     - export _dzil_dirs="{@d}"
@@ -390,7 +392,7 @@ os: linux
 dist: xenial
 before_install:
     - . .travis.bash --cmd before_install
-    - eval "$(perl -Mlocal::lib=$HOME/perl_modules)"
+    - {$local-lib-eval}
     - . .travis.bash --cmd install
     - cpanm App::XML::DocBook::Builder File::Find::Object::Rule HTML::T5 IO::All Path::Tiny {$.theme eq 'XML-Grammar-Vered' ?? 'XML::Grammar::Vered' !! 'XML::Grammar::Screenplay'}
     - git clone https://github.com/shlomif/screenplays-common
