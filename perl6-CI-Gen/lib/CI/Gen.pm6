@@ -73,7 +73,7 @@ EOF
 
     method !calc-golang-version()
     {
-        return '1.11';
+        return '1.13';
     }
 
     method !write-travis-yml(:@pkgs, :$contents)
