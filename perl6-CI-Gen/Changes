@@ -2,7 +2,7 @@ Revision history for CI-Gen
 
 {{$NEXT}}
 
-0.0.2  2020-01-13T00:30:00+03:00
+0.0.2  2020-01-13T00:40:48+02:00
     - Update the travis p5-versions list default to avoid test breakage after
     a travis update.
 
