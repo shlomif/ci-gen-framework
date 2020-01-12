@@ -264,7 +264,7 @@ END_OF_PROGRAM
        {
             my @d = %.params{'subdirs'}.split(' ');
 
-            my @p5-vers = (%.params{'p5-vers'} || '5.26 5.24 5.22 5.20 5.18 5.16 5.14').split(' ');
+            my @p5-vers = (%.params{'p5-vers'} || '5.22 5.24 5.26 5.28 5.30').split(' ');
 
             my @dzil-deps = <Dist::Zilla Pod::Weaver::Section::Support Perl::Critic Perl::Tidy Test::Code::TidyAll>;
 

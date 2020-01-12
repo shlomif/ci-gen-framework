@@ -3,7 +3,7 @@ use Test;
 use File::Temp;
 use CI::Gen;
 
-plan 11;
+plan 12;
 
 my $d = tempdir;
 
@@ -100,7 +100,15 @@ sub run-gen(@args) {
     $w.test-travis-yml( "basedir");
     # TEST
     $w.contains-travis-yml( 'eval "$(perl -I ~/perl_modules/lib/perl5 -Mlocal::lib=$HOME/perl_modules)"' );
+
+    my $needle = "\nperl:\n";
+    for qqw/ blead 5.22 5.24 5.26 5.28 5.30 / -> $v {
+        $needle ~= "    - '$v'\n";
+    }
+    # TEST
+    $w.contains-travis-yml( $needle )
 }
+
 {
     my $w = Dir-wrapper.new(sub => "test-vered");
     CI::Gen::CI-Gen.new(
