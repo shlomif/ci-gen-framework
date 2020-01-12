@@ -1,5 +1,5 @@
 use v6.c;
-unit class CI::Gen:ver<0.0.1>:auth<cpan:SHLOMIF>;
+unit class CI::Gen:ver<0.0.2>:auth<cpan:SHLOMIF>;
 
 
 =begin pod
