@@ -231,6 +231,8 @@ bash bin/install-git-cmakey-program-system-wide.bash 'git' 'src' 'https://github
 bash bin/install-git-cmakey-program-system-wide.bash 'git' 'installer' 'https://github.com/thewml/latemp.git'
 sudo -H `which python3` -m pip install beautifulsoup4 bs4 cookiecutter lxml pycotap vnu_validator WebTest Zenfilter
 perl bin/my-cookiecutter.pl
+# For various sites
+cpanm --notest HTML::Toc
 deps-app plinst -i bin/common-required-deps.yml -i bin/required-modules.yml
 gem install asciidoctor compass compass-blueprint
 ( cd .. && git clone https://github.com/thewml/wml-extended-apis.git && cd wml-extended-apis/xhtml/1.x && bash Install.bash )
@@ -250,7 +252,7 @@ END
         my $travis-api-key = %.params{'travis-api-key'} || '';
         my $username = %.params{'username'} || '';
         my $reponame = %.params{'reponame'} || '';
-            self!write-travis-yml(pkgs=><ack-grep asciidoc build-essential cmake cpanminus dbtoepub docbook-defguide docbook-xsl docbook-xsl-ns fortune-mod graphicsmagick hunspell hunspell-en-gb inkscape libdb5.3-dev libgd-dev libhunspell-dev libncurses-dev libpcre3-dev libperl-dev libxml2-dev mercurial lynx optipng perl python3 python3-setuptools python3-pip silversearcher-ag strip-nondeterminism tidy valgrind wml xsltproc xz-utils zip>, contents=>q:c:to/END_OF_PROGRAM/);
+            self!write-travis-yml(pkgs=><ack-grep asciidoc build-essential cmake cpanminus dbtoepub docbook-defguide docbook-xsl docbook-xsl-ns fortune-mod graphicsmagick hunspell hunspell-en-gb inkscape libdb5.3-dev libgd-dev libgdbm-dev libgdbm-compat-dev libhunspell-dev libncurses-dev libpcre3-dev libperl-dev libxml2-dev mercurial lynx optipng perl python3 python3-setuptools python3-pip silversearcher-ag strip-nondeterminism tidy valgrind wml xsltproc xz-utils zip>, contents=>q:c:to/END_OF_PROGRAM/);
 {$travis-cache}
 deploy:
     provider: releases
