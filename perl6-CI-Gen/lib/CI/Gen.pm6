@@ -254,7 +254,7 @@ END
         my $travis-api-key = %.params{'travis-api-key'} || '';
         my $username = %.params{'username'} || '';
         my $reponame = %.params{'reponame'} || '';
-            self!write-travis-yml(pkgs=><ack-grep asciidoc build-essential cmake cpanminus dbtoepub docbook-defguide docbook-xsl docbook-xsl-ns fortune-mod graphicsmagick hspell hunspell hunspell-en-gb inkscape libdb5.3-dev libgd-dev libhunspell-dev libncurses-dev libpcre3-dev libperl-dev libxml2-dev mercurial myspell-en-gb lynx optipng perl python3 python3-setuptools python3-pip silversearcher-ag strip-nondeterminism tidy valgrind wml xsltproc xz-utils zip>, contents=>q:c:to/END_OF_PROGRAM/);
+            self!write-travis-yml(pkgs=><ack-grep build-essential cmake cpanminus dbtoepub docbook-defguide docbook-xsl docbook-xsl-ns fortune-mod graphicsmagick hspell hunspell hunspell-en-gb inkscape libdb5.3-dev libgd-dev libgdbm-dev libgdbm-compat-dev libhunspell-dev libncurses-dev libpcre3-dev libperl-dev libxml2-dev mercurial myspell-he lynx optipng perl python3 python3-setuptools python3-pip silversearcher-ag strip-nondeterminism tidy valgrind wml xsltproc xz-utils zip>, contents=>q:c:to/END_OF_PROGRAM/);
 {$travis-cache}
 deploy:
     provider: releases
