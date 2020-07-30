@@ -229,13 +229,14 @@ cpanm --notest Bit::Vector Carp::Always Class::XSAccessor GD Getopt::Long IO::Al
 cpanm --notest Class::XSAccessor Config::IniFiles HTML::Links::Localize
 bash bin/install-git-cmakey-program-system-wide.bash 'git' 'src' 'https://github.com/thewml/website-meta-language.git'
 bash bin/install-git-cmakey-program-system-wide.bash 'git' 'installer' 'https://github.com/thewml/latemp.git'
-sudo -H `which python3` -m pip install beautifulsoup4 bs4 cookiecutter lxml pycotap vnu_validator Pillow WebTest Zenfilter
+sudo -H `which python3` -m pip install beautifulsoup4 bs4 click cookiecutter lxml pycotap rebookmaker vnu_validator Pillow WebTest Zenfilter
 perl bin/my-cookiecutter.pl
 # For various sites
 cpanm --notest HTML::Toc XML::Feed
 deps-app plinst -i bin/common-required-deps.yml -i bin/required-modules.yml
 # To take precedence over both global and local executables.
 sudo gem install asciidoctor compass compass-blueprint
+PATH="$HOME/bin:$PATH"
 ( cd .. && git clone https://github.com/thewml/wml-extended-apis.git && cd wml-extended-apis/xhtml/1.x && bash Install.bash )
 ( cd .. && git clone https://github.com/thewml/latemp.git && cd latemp/support-headers && perl install.pl )
 ( cd .. && git clone https://github.com/shlomif/wml-affiliations.git && cd wml-affiliations/wml && bash Install.bash )
@@ -253,7 +254,7 @@ END
         my $travis-api-key = %.params{'travis-api-key'} || '';
         my $username = %.params{'username'} || '';
         my $reponame = %.params{'reponame'} || '';
-            self!write-travis-yml(pkgs=><ack-grep asciidoc build-essential cmake cpanminus dbtoepub docbook-defguide docbook-xsl docbook-xsl-ns fortune-mod graphicsmagick hspell hunspell hunspell-en-gb inkscape libdb5.3-dev libgd-dev libgdbm-dev libgdbm-compat-dev libhunspell-dev libncurses-dev libpcre3-dev libperl-dev libxml2-dev mercurial myspell-he lynx optipng perl python3 python3-setuptools python3-pip silversearcher-ag strip-nondeterminism tidy valgrind wml xsltproc xz-utils zip>, contents=>q:c:to/END_OF_PROGRAM/);
+            self!write-travis-yml(pkgs=><ack-grep asciidoc build-essential cmake cpanminus dbtoepub docbook-defguide docbook-xsl docbook-xsl-ns fortune-mod graphicsmagick hspell hunspell hunspell-en-gb inkscape libdb5.3-dev libgd-dev libhunspell-dev libncurses-dev libpcre3-dev libperl-dev libxml2-dev mercurial myspell-en-gb lynx optipng perl python3 python3-setuptools python3-pip silversearcher-ag strip-nondeterminism tidy valgrind wml xsltproc xz-utils zip>, contents=>q:c:to/END_OF_PROGRAM/);
 {$travis-cache}
 deploy:
     provider: releases
@@ -268,10 +269,12 @@ go:
     - '{self!calc-golang-version()}.x'
 os: linux
 dist: bionic
+rvm:
+    - 2.7.0
 before_install:
     - . .travis.bash --cmd before_install
 install:
-    - git clone https://github.com/vim/vim && ( cd vim && git checkout v8.1.1692 && ./configure --with-features=huge && make && sudo make install ) && rm -fr vim
+    - git clone https://github.com/vim/vim && ( cd vim && git checkout v8.2.1320 && ./configure --with-features=huge && make && sudo make install ) && rm -fr vim
 script:
     - export XML_CATALOG_FILES="/etc/xml/catalog $HOME/markup-validator/htdocs/sgml-lib/catalog.xml"
     - TIDYALL_DATA_DIR="$HOME/tidyall_d" bash -x bin/run-ci-build.bash
