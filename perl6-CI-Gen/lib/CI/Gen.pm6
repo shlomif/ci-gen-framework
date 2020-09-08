@@ -251,6 +251,7 @@ END
             },
         );
         my $travis-api-key = %.params{'travis-api-key'} || '';
+        my $travis-dist = %.params{'travis-dist'} || 'bionic';
         my $username = %.params{'username'} || '';
         my $reponame = %.params{'reponame'} || '';
             self!write-travis-yml(pkgs=><ack-grep build-essential cmake cpanminus dbtoepub docbook-defguide docbook-xsl docbook-xsl-ns fortune-mod graphicsmagick hspell hunspell hunspell-en-gb inkscape libdb5.3-dev libgd-dev libgdbm-dev libgdbm-compat-dev libhunspell-dev libncurses-dev libpcre3-dev libperl-dev libxml2-dev mercurial myspell-he lynx optipng perl python3 python3-setuptools python3-pip silversearcher-ag strip-nondeterminism tidy valgrind wml xsltproc xz-utils zip>, contents=>q:c:to/END_OF_PROGRAM/);
@@ -267,7 +268,7 @@ deploy:
 go:
     - '{self!calc-golang-version()}.x'
 os: linux
-dist: bionic
+dist: {$travis-dist}
 rvm:
     - 2.7.0
 before_install:
@@ -405,12 +406,13 @@ END_OF_PROGRAM
         }
         else
         {
+            my $travis-dist = %.params{'travis-dist'} || 'xenial';
             self!write-travis-yml(
                 pkgs=><ack-grep cpanminus dbtoepub docbook-defguide docbook-xsl libperl-dev libxml-libxml-perl libxml-libxslt-perl make perl python3-pip python3-setuptools tidy xsltproc>,
                 contents=>q:c:to/END_OF_PROGRAM/);
 {$travis-cache}
 os: linux
-dist: xenial
+dist: {$travis-dist}
 before_install:
     - . .travis.bash --cmd before_install
     - {$local-lib-eval}
