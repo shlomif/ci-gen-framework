@@ -231,7 +231,7 @@ cpanm --notest Bit::Vector Carp::Always Class::XSAccessor GD Getopt::Long IO::Al
 cpanm --notest Class::XSAccessor Config::IniFiles HTML::Links::Localize
 bash bin/install-git-cmakey-program-system-wide.bash 'git' 'src' 'https://github.com/thewml/website-meta-language.git'
 bash bin/install-git-cmakey-program-system-wide.bash 'git' 'installer' 'https://github.com/thewml/latemp.git'
-sudo -H `which python3` -m pip install beautifulsoup4 bs4 click cookiecutter lxml pycotap rebookmaker vnu_validator Pillow WebTest Zenfilter
+sudo -H `which python3` -m pip install beautifulsoup4 bs4 click cookiecutter lxml pycotap rebookmaker vnu_validator zenfilter Pillow WebTest
 perl bin/my-cookiecutter.pl
 # For various sites
 cpanm --notest HTML::Toc XML::Feed
@@ -253,7 +253,7 @@ END
             },
         );
         my $travis-api-key = %.params{'travis-api-key'} || '';
-        my $travis-dist = %.params{'travis-dist'} || 'bionic';
+        my $travis-dist = %.params{'travis-dist'} || 'focal';
         my $username = %.params{'username'} || '';
         my $reponame = %.params{'reponame'} || '';
             self!write-travis-yml(pkgs=><ack-grep build-essential cmake cpanminus dbtoepub docbook-defguide docbook-xsl docbook-xsl-ns fortune-mod graphicsmagick hspell hunspell hunspell-en-gb inkscape libdb5.3-dev libgd-dev libgdbm-dev libgdbm-compat-dev libhunspell-dev libncurses-dev libpcre3-dev libperl-dev libtidy-dev libxml2-dev mercurial myspell-he lynx optipng perl python3 python3-setuptools python3-pip silversearcher-ag strip-nondeterminism tidy valgrind wml xsltproc xz-utils zip>, contents=>q:c:to/END_OF_PROGRAM/);
