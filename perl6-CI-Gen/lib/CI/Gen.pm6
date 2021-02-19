@@ -232,12 +232,12 @@ END_OF_PROGRAM
 eval "$(GIMME_GO_VERSION={self!calc-golang-version()} gimme)"
 go get -u github.com/tdewolff/minify/cmd/minify
 {$local-lib-eval}
-cpanm -vvv IO::Async
+cpanm -v --notest IO::Async
 cpanm App::Deps::Verify App::XML::DocBook::Builder Pod::Xhtml
 {$install-T5-workaround}
 cpanm HTML::T5
 # For wml
-cpanm --notest Bit::Vector Carp::Always Class::XSAccessor GD Getopt::Long IO::All Image::Size List::MoreUtils Path::Tiny Term::ReadKey
+cpanm --notest Bit::Vector Carp::Always Class::XSAccessor GD Getopt::Long Image::Size List::MoreUtils Path::Tiny Term::ReadKey
 # For quadp
 cpanm --notest Class::XSAccessor Config::IniFiles HTML::Links::Localize
 bash bin/install-git-cmakey-program-system-wide.bash 'git' 'src' 'https://github.com/thewml/website-meta-language.git'
