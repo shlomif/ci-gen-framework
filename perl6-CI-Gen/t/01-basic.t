@@ -3,7 +3,7 @@ use Test;
 use File::Temp;
 use CI::Gen;
 
-plan 12;
+plan 13;
 
 my $d = tempdir;
 
@@ -35,6 +35,9 @@ my class Dir-wrapper
     }
     method contains-travis-yml($substr) {
         return ok(slurp(self.travis-yml()).contains($substr));
+    }
+    method like-travis-bash($re) {
+        return like(slurp(self.travis-bash()), $re);
     }
     method like-travis-yml($re) {
         return like(slurp(self.travis-yml()), $re);
@@ -138,6 +141,9 @@ sub run-gen(@args) {
     test-e "{$w.dir}/.travis.bash", "exists";
     # TEST
     $w.unlike-travis-bash( /\"install\"/);
+    # TEST
+    $w.like-travis-bash( /cpanm' '\-v' '\-\-notest' 'IO\:\:Async/);
+
 
 }
 done-testing;
