@@ -1,5 +1,5 @@
 use v6.c;
-unit class CI::Gen:ver<0.0.2>:auth<cpan:SHLOMIF>;
+unit class CI::Gen:ver<0.0.3>:auth<cpan:SHLOMIF>;
 
 
 =begin pod
@@ -422,7 +422,7 @@ END_OF_PROGRAM
         }
         else
         {
-            my $travis-dist = %.params{'travis-dist'} || 'xenial';
+            my $travis-dist = %.params{'travis-dist'} || 'bionic';
             self!write-travis-yml(
                 pkgs=><ack-grep cpanminus dbtoepub docbook-defguide docbook-xsl libperl-dev libxml-libxml-perl libxml-libxslt-perl make perl python3-pip python3-setuptools tidy xsltproc>,
                 contents=>q:c:to/END_OF_PROGRAM/);
@@ -436,9 +436,9 @@ before_install:
     - cpanm App::XML::DocBook::Builder File::Find::Object::Rule HTML::T5 IO::All Path::Tiny {$.theme eq 'XML-Grammar-Vered' ?? 'XML::Grammar::Vered' !! 'XML::Grammar::Screenplay'}
     - git clone https://github.com/shlomif/screenplays-common
 perl:
-    - "5.26"
+    - "5.30"
 python:
-    - "3.6"
+    - "3.8"
 script:
     - . .travis.bash --cmd build
 sudo: required
