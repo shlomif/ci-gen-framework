@@ -424,7 +424,7 @@ END_OF_PROGRAM
         {
             my $travis-dist = %.params{'travis-dist'} || 'bionic';
             self!write-travis-yml(
-                pkgs=><ack-grep cpanminus dbtoepub docbook-defguide docbook-xsl libperl-dev libxml-libxml-perl libxml-libxslt-perl make perl python3-pip python3-setuptools tidy xsltproc>,
+                pkgs=><ack-grep cpanminus dbtoepub docbook-defguide docbook5-xml docbook-xsl docbook-xsl-ns libperl-dev libxml-libxml-perl libxml-libxslt-perl make perl python3-pip python3-setuptools tidy xsltproc>,
                 contents=>q:c:to/END_OF_PROGRAM/);
 {$travis-cache}
 os: linux
