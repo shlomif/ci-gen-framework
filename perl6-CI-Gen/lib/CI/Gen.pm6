@@ -74,7 +74,7 @@ EOF
 
     method !calc-golang-version()
     {
-        return '1.13';
+        return '1.16';
     }
 
     method !write-travis-yml(:@pkgs, :$contents)
@@ -232,8 +232,10 @@ END_OF_PROGRAM
 eval "$(GIMME_GO_VERSION={self!calc-golang-version()} gimme)"
 go get -u github.com/tdewolff/minify/cmd/minify
 {$local-lib-eval}
+PERL_CPANM_OPT+=" --quiet "
+export PERL_CPANM_OPT
 cpanm -v --notest IO::Async
-cpanm App::Deps::Verify App::XML::DocBook::Builder Pod::Xhtml
+cpanm --notest App::Deps::Verify App::XML::DocBook::Builder Pod::Xhtml
 {$install-T5-workaround}
 cpanm HTML::T5
 # For wml
@@ -246,7 +248,7 @@ sudo -H `which python3` -m pip install beautifulsoup4 bs4 click cookiecutter lxm
 perl bin/my-cookiecutter.pl
 # For various sites
 cpanm --notest HTML::Toc XML::Feed
-deps-app plinst -i bin/common-required-deps.yml -i bin/required-modules.yml
+deps-app plinst --notest -i bin/common-required-deps.yml -i bin/required-modules.yml
 gem install asciidoctor compass compass-blueprint
 PATH="$HOME/bin:$PATH"
 ( cd .. && git clone https://github.com/thewml/wml-extended-apis.git && cd wml-extended-apis/xhtml/1.x && bash Install.bash )
@@ -270,17 +272,17 @@ END
         my $travis-dist = %.params{'travis-dist'} || 'focal';
         my $username = %.params{'username'} || '';
         my $reponame = %.params{'reponame'} || '';
-            self!write-travis-yml(pkgs=><ack-grep build-essential cmake cpanminus dbtoepub docbook-defguide docbook-xsl docbook-xsl-ns fortune-mod graphicsmagick hspell hunspell hunspell-en-gb inkscape libdb5.3-dev libgd-dev libgdbm-dev libgdbm-compat-dev libhunspell-dev libncurses-dev libpcre3-dev libperl-dev libtidy-dev libxml2-dev mercurial myspell-he lynx optipng perl python3 python3-setuptools python3-pip silversearcher-ag strip-nondeterminism tidy valgrind wml xsltproc xz-utils zip>, contents=>q:c:to/END_OF_PROGRAM/);
+            self!write-travis-yml(pkgs=><ack-grep asciidoc build-essential cmake cmake-data cpanminus dbtoepub docbook-defguide docbook-xsl docbook-xsl-ns docbook5-xml fortune-mod gperf graphicsmagick hspell hunspell hunspell-en-gb inkscape libapr1-dev libc6-dbg libcmocka-dev libdb5.3-dev libgd-dev libgdbm-compat-dev libgdbm-dev libgmp-dev libgoogle-perftools-dev libhunspell-dev libncurses-dev libpcre3-dev libperl-dev libtidy-dev libxml2-dev lynx mercurial myspell-he lynx optipng perl pysassc python3 python3-pip python3-setuptools silversearcher-ag strip-nondeterminism tidy valgrind wml xsltproc xvfb xz-utils zip>, contents=>q:c:to/END_OF_PROGRAM/);
 {$travis-cache}
 deploy:
-    provider: releases
+    cleanup: true
     api_key:
         secure: {$travis-api-key}
     file: site-dest.tar.xz
     on:
         repo: "{$username}/{$reponame}"
         tags: true
-    skip_cleanup: true
+    provider: releases
 go:
     - '{self!calc-golang-version()}.x'
 os: linux
@@ -290,12 +292,27 @@ rvm:
 before_install:
     - . .travis.bash --cmd before_install
 install:
-    - git clone https://github.com/vim/vim && ( cd vim && git checkout v8.2.1320 && ./configure --with-features=huge && make && sudo make install ) && rm -fr vim
+    - git clone https://github.com/vim/vim && ( cd vim && git checkout v8.2.2918 && ./configure --with-features=huge && make && sudo make install ) && rm -fr vim
+    # Taken from https://github.com/brad/Inkscape-OpenSCAD-DXF-Export/blob/master/.travis.yml
+    # Thanks!
+    - sudo add-apt-repository -y ppa:inkscape.dev/stable
+    - sudo apt-get update -qq
+    - sudo apt-get --only-upgrade install libnss3
+    - sudo apt-get install -qq inkscape
 script:
+    # Taken from https://dev.to/hiro98/how-to-use-the-systemd-userspace-dbus-api-on-traivis-ci-lag
+    # Thanks!
+    - sudo apt update
+    - sudo apt install dbus-user-session
+    - sudo apt install at-spi2-core
+    - systemctl --user start dbus
+    - export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus
     - export XML_CATALOG_FILES="/etc/xml/catalog $HOME/markup-validator/htdocs/sgml-lib/catalog.xml"
     - TIDYALL_DATA_DIR="$HOME/tidyall_d" bash -x bin/run-ci-build.bash
     - tar -caf site-dest.tar.xz dest/
     - set +x
+services:
+    - xvfb
 END_OF_PROGRAM
        }
        elsif ($dzil)
