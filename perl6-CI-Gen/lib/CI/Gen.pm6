@@ -230,7 +230,17 @@ END_OF_PROGRAM
             extra_stages => {
                 'before_install' => q:c:to/END/,
 eval "$(GIMME_GO_VERSION={self!calc-golang-version()} gimme)"
-go get -u github.com/tdewolff/minify/cmd/minify
+(
+    mkdir -p $HOME/src
+    cd $HOME/src
+    git clone https://github.com/tdewolff/minify.git
+    (
+        cd minify
+        make SHELL=/bin/bash install
+    )
+    rm -fr minify
+)
+which minify
 {$local-lib-eval}
 PERL_CPANM_OPT+=" --quiet "
 export PERL_CPANM_OPT
