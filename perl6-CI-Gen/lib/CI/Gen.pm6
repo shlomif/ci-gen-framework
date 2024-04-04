@@ -282,7 +282,7 @@ END
         my $travis-dist = %.params{'travis-dist'} || 'focal';
         my $username = %.params{'username'} || '';
         my $reponame = %.params{'reponame'} || '';
-            self!write-travis-yml(pkgs=><ack-grep asciidoc build-essential cmake cmake-data cpanminus dbtoepub docbook-defguide docbook-xsl docbook-xsl-ns docbook5-xml fortune-mod gperf graphicsmagick hspell hunspell hunspell-en-gb inkscape libapr1-dev libc6-dbg libcmocka-dev libdb5.3-dev libgd-dev libgdbm-compat-dev libgdbm-dev libgmp-dev libgoogle-perftools-dev libhunspell-dev libncurses-dev libpcre3-dev libperl-dev libtidy-dev libxml2-dev lynx mercurial myspell-he optipng perl pysassc python3 python3-pip python3-setuptools silversearcher-ag strip-nondeterminism tidy valgrind wml xsltproc xvfb xz-utils zip>, contents=>q:c:to/END_OF_PROGRAM/);
+            self!write-travis-yml(pkgs=><ack-grep asciidoc build-essential cmake cmake-data cpanminus dbtoepub docbook-defguide docbook-xsl docbook-xsl-ns docbook5-xml fortune-mod gperf graphicsmagick hspell hunspell hunspell-en-gb inkscape libapr1-dev libc6-dbg libcmocka-dev libdb5.3-dev libgd-dev libgdbm-compat-dev libgdbm-dev libgmp-dev libhunspell-dev libncurses-dev libpcre3-dev libperl-dev libtidy-dev libxml2-dev lynx myspell-he optipng perl pysassc python3 python3-pip python3-setuptools silversearcher-ag strip-nondeterminism tidy valgrind wml xsltproc xvfb xz-utils zip>, contents=>q:c:to/END_OF_PROGRAM/);
 {$travis-cache}
 deploy:
     cleanup: true
